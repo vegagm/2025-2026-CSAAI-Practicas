@@ -27,6 +27,35 @@ display: table;
 clear: both;
 }
 
+/* Queremos que la foto del principio de garfiel tenga formato de
+curriculum para ello lo hacemos en circulo 
+display: block;
+margin: auto;*/
+
+.foto-cv {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    margin: 15px auto;
+    background-color: white;   
+}
+
+.foto-container {
+    width: 150px;
+    height: 150px;
+    background-color: white;
+    border-radius: 50%;
+    margin: 15px auto;
+    padding: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* #c1 {
     background-color:#aaa;
 } 
@@ -46,10 +75,10 @@ se vea la imagen */
 /* estilos para imágenes https://www.w3schools.com/css/css3_images.asp */
 /* posicionamiento de imágenes https://www.w3schools.com/css/css_positioning.asp */
 
-img {
+/* .img {
     width: 100%;
     height: auto;
-}
+}  */
 
 .iresponsive {
     padding: 0 6px;

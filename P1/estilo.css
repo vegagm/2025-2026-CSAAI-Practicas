@@ -27,24 +27,21 @@ display: table;
 clear: both;
 }
 
-#c1 {
+/* #c1 {
     background-color:#aaa;
-}
+} 
 
 #c2 {
     background-color:#bbb;
+} */
+
+/*Hacemos un fondo blanco un poco tranparente, para que 
+se vea la imagen */
+
+#c1, #c2 {
+    background-color: rgb(255, 255, 255, 0.85);
 }
 
-/*Ponemos el fondo del la página
--cover: ocupa toda la pantalla
--no repeat: no se repite
--center: centrada*/
-body {
-    background-image: url("fondoNaranja1.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 
 /* estilos para imágenes https://www.w3schools.com/css/css3_images.asp */
 /* posicionamiento de imágenes https://www.w3schools.com/css/css_positioning.asp */
@@ -71,6 +68,19 @@ img {
     .iresponsive {
         width: 100%;
     }
+}
+
+/*Ponemos el fondo del la página
+-cover: ocupa toda la pantalla
+-no repeat: no se repite
+-center: centrada*/
+body {
+    background-image: url("fondoNaranja1.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

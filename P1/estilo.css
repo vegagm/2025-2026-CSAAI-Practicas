@@ -112,4 +112,19 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.dato {
+    font-size: 10px;
+    margin: 1px 0;
+}
+
+/* Tamaño de las letras de la columna izquierda */
+.tamanio-letra {
+    font-size: 12px;
+}
+
+/* Tamaños de letra de los subtitulos */
+.letra-subtitulo {
+    font-size: 18px;
+}
+
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

@@ -28,9 +28,7 @@ clear: both;
 }
 
 /* Queremos que la foto del principio de garfiel tenga formato de
-curriculum para ello lo hacemos en circulo 
-display: block;
-margin: auto;*/
+curriculum para ello lo hacemos en circulo */
 
 .foto-cv {
     width: 140px;
@@ -43,34 +41,12 @@ margin: auto;*/
     background-color: white;   
 }
 
-.foto-container {
-    width: 150px;
-    height: 150px;
-    background-color: white;
-    border-radius: 50%;
-    margin: 15px auto;
-    padding: 5px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* #c1 {
-    background-color:#aaa;
-} 
-
-#c2 {
-    background-color:#bbb;
-} */
-
 /*Hacemos un fondo blanco un poco tranparente, para que 
 se vea la imagen */
 
 #c1, #c2 {
     background-color: rgb(255, 255, 255, 0.85);
 }
-
 
 /* estilos para imágenes https://www.w3schools.com/css/css3_images.asp */
 /* posicionamiento de imágenes https://www.w3schools.com/css/css_positioning.asp */
@@ -99,10 +75,7 @@ se vea la imagen */
     }
 }
 
-/*Ponemos el fondo del la página
--cover: ocupa toda la pantalla
--no repeat: no se repite
--center: centrada*/
+/*Ponemos el fondo del la página*/
 body {
     background-image: url("fondoNaranja1.jpg");
     background-size: cover;
@@ -111,20 +84,40 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 .dato {
     font-size: 10px;
     margin: 1px 0;
 }
-
 /* Tamaño de las letras de la columna izquierda */
 .tamanio-letra {
-    font-size: 12px;
+    font-size: 15px;
 }
-
 /* Tamaños de letra de los subtitulos */
 .letra-subtitulo {
-    font-size: 18px;
+    font-size: 26px;
+}
+/* Tamaño del titulo y lo centramos */
+.titulo {
+    font-size: 64px;
+    text-align: center;
+    color: white;
+}
+
+/* Centramos la foto en horizontal */
+.foto-centrada {
+    display: block;
+    margin: 0 auto;
+}
+/* Metemos un tabulador o espacio entre la imagen y la frase */
+.style {
+    padding-left: 50px;
+    font-size: 15px;
+}
+/* Le damos estilo para que no se vaya la tabla y quede alineada */
+.th {
+    text-align: left;
+    padding-left: 15px;
+    vertical-align: middle;
 }
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

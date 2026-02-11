@@ -65,12 +65,21 @@ se vea la imagen */
 /* Responsive layout - cuando el ancho de pantalla es menor a 600px, muestra las columnas apiladas. */
 /* Así conseguimos que el contenido se vea bien en dispositvos móviles */
 
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
     .columna {
       width: 100%;
     }
 
     .iresponsive {
+        width: 100%;
+    }
+} */
+/* lo ajustamos para el movil las columnas */
+@media screen and (max-width: 600px) {
+    .fila{
+        flex-direction: column;
+    }
+    .izquierda,.derecha {
         width: 100%;
     }
 }
@@ -135,5 +144,12 @@ body {
 .derecha {
     width: 75%;
 }
+/* hacemos que cada seccion quede separada y ordenada */
+.bloque {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: rgba(255,255,255,0.6);
+    border-radius: 10px;
+} 
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

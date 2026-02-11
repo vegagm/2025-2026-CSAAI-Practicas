@@ -6,11 +6,11 @@ durriculum de Garfield */
   }
   
 /* Crear columnas de ancho diferente que se colocan una a continuación de la otra */
-.columna {
+/* .columna {
 float: left;
 padding: 10px;
 min-height: 500px;
-}
+} */
 
 .izquierda {
 width: 25%;
@@ -21,11 +21,11 @@ width: 75%;
 }
 
 /* Clear floats despues de las columnas para eliminar la superposición */
-.filla:after {
+/* .filla:after {
 content: "";
 display: table;
 clear: both;
-}
+} */
 
 /* Queremos que la foto del principio de garfiel tenga formato de
 curriculum para ello lo hacemos en circulo */
@@ -118,6 +118,22 @@ body {
     text-align: left;
     padding-left: 15px;
     vertical-align: middle;
+}
+.fila {
+    display: flex;
+    gap: 20px;
+    align-items: stretch; /* Misma altura */
+    padding: 20px;
+}
+.columna {
+    padding: 15px;
+}
+/* Para que las dos columnas midan lo mismo */
+.izquierda {
+    width: 75%;
+}
+.derecha {
+    width: 75%;
 }
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

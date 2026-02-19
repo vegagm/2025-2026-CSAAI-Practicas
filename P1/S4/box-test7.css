@@ -8,8 +8,14 @@ body {
 
 /*  Propiedades de la caja del párrafo */
 p {
-  margin: 10px;
-  padding: 10px; /* Relleno */
+  /* margin: 10px; */
+  margin-top: 50px;
+  padding-top: 16px;
+  padding-bottom:16px;
+  padding-left:16px;
+  padding-right:16px;
+  /* padding: 10px; Relleno */
   border:solid;
+  border:dashed;
   border-color: blue;
 }

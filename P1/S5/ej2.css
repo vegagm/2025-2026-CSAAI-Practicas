@@ -1,0 +1,31 @@
+#quien {
+  color: orange;
+}
+
+.cual {
+  color: green;
+}
+
+/* Regla de estilo 1 */
+p {
+    margin: 0px;
+    padding: 10px;
+    border: solid;
+    border-color: blue;
+    color: blue;
+
+    text-align: center;
+    
+}
+
+/* Regla de estilo 2 */
+div {
+  color: yellow;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    color: pink;
+}

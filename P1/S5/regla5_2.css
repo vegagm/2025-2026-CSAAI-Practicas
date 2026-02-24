@@ -1,0 +1,19 @@
+
+div {
+    background-color: aliceblue;
+    margin: 10px;
+    padding: 20px;
+}
+
+p {
+    margin-top: 5px;
+}
+
+#yo {
+    background-color: aquamarine;
+}
+
+.miclase {
+    background-color: antiquewhite;
+    color: darkgreen;
+}

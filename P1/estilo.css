@@ -179,5 +179,28 @@ body {
 html, body {
     position: relative;
 }
+.mi-boton {
+    background-color:#42a5f5 ;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:8px;
+    cursor: pointer;
+    transition: all 0.3s ease;  /*hacemos una animacion suave */
+}
+.mi-boton:hover { /*Para cuando pasamos el raton */
+    background-color:#2b7fc3;
+    transform: translateY(5px);
+}
+.mi-boton:active {
+    transform: translateY(0px); /*Para volver a su sitio */
+}
+.subtitulo {
+    background: rgba(0,0,0,0.1);
+    padding: ;
+    border-radius: ;
+    backdrop-filter: ;
+    color: ;
+}
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

@@ -197,10 +197,35 @@ html, body {
 }
 .subtitulo {
     background: rgba(0,0,0,0.1);
-    padding: ;
-    border-radius: ;
-    backdrop-filter: ;
-    color: ;
+    padding:10px 20px;
+    border-radius:12px;
+    backdrop-filter:blur(10px);
+    color:rgb(0, 0, 0);
+    font-weight: 700;
+}
+.subtitulo:hover {
+    transform: translateX(5px);
+}
+.subtitulo:active {
+    transform: translateX(0px);
+}
+/* Estilo para los links de inicio, proyecto y acerca de */
+.link {
+    font-weight: 800;
+    font-size: 18px;
+    color:rgb(250, 250, 247) ;
+    padding: 5px 15px;
+}
+.link:hover {
+    transform: translateX(5px);
+}
+.link:active {
+    transform: translateX(0px);
+}
+.subtitulo-proyectos {
+    font-size:23px;
+    font-weight: 600;
+    color:rgb(255, 255, 255);
 }
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

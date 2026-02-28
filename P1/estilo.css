@@ -160,13 +160,15 @@ html, body {
     position: relative;
 }
 .mi-boton {
-    background-color:#42a5f5 ;
-    color:white;
-    border:none;
-    padding:12px 25px;
-    border-radius:8px;
+    display: inline-block;  
+    text-decoration: none;   /* quita subrayado */
+    background-color: #42a5f5;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;  /*hacemos una animacion suave */
+    transition: all 0.3s ease; /*hacemos una animacion suave */
+    font-weight: bold;
 }
 .mi-boton:hover { /*Para cuando pasamos el raton */
     background-color:#2b7fc3;
@@ -175,6 +177,7 @@ html, body {
 .mi-boton:active {
     transform: translateY(0px); /*Para volver a su sitio */
 }
+
 .subtitulo {
     background: rgba(0,0,0,0.1);
     padding:10px 20px;

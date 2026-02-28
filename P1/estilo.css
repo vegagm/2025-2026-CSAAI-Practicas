@@ -154,7 +154,9 @@ body {
     top: 20px;
     right: 20px;
     width: 200px;
+    height: auto;
     z-index: 1000;
+    pointer-events: none;
 }
 html, body {
     position: relative;

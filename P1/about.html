@@ -8,14 +8,8 @@
     <!-- Hoja de estilo externa -->
    <link rel="stylesheet" href="estilo.css">
 </head>
-<body>
-    <h1 class="titulo">Acerca de ...</h1>
-    <!-- Añadimos la vuelta al index -->
-    <!-- <h2><a href="https://vegagm.github.io/2025-2026-CSAAI-Practicas/P1/index.html">Volver al inicio</a></h2> -->
-</body>
 
 <body>
-
     <header>
         <div>
             <ul class="links">
@@ -26,13 +20,16 @@
         </div>
     </header>
 
-    <div id="c2" class="columna derecha">
+    <!-- Fila que contiene las dos columnas -->
+    <div class="fila">
+         <!-- Columna de la izquierda -->
+        <div id="c1" class="columna izquierda">
 
-        <img src="garfeildlasania.webp" alt="Garfield_comiendo" width="300" height="200" class="foto-centrada">
+            <img src="garfeildlasania.webp" alt="Garfield_comiendo" width="300" height="200" class="foto-centrada">
 
-        <div class="bloque">
+            <div class="bloque">
                 <h2 class="letra-subtitulo">Quién soy</h2>
-                    <p class="tamanio-letra"> 
+                <p class="tamanio-letra"> 
                     Soy Garfield, un personaje animado de una famosa serie de cómics y dibujos que lleva
                     mi nombre, creada por el caricaturista Jim Davis en 1978. A lo largo de los años he 
                     protagonizado tiras, series y películas que me han hecho mundialmente famoso (aunque yo 
@@ -41,22 +38,26 @@
                     lasaña, y pasar la mayor parte del día durmiendo. En mis aventuras convivo con mi humano Jon 
                     Arbuckle, el perro Odie y otros personajes, a los que suelo observar con sarcasmo mientras descanso 
                     tranquilamente. 
-                    </p>
-        </div>
-
-        <div class="bloque">
-            <h2 class="letra-subtitulo">Sobre mí</h2>
-                <p class="tamanio-letra">
-                Soy un gato naranja profesional en dormir, comer lasañas y evitar 
-                cualquier tipo de esfuerzo innecesario. Me considero un experto en la vida
-                cómoda, con más de 10 años de experiencia descansando en sofás, camas y cualquier
-                superficie acolchada. Durante mi carrera he prefeccionado el arte de parecer ocupado sin hacer
-                absolutamente nada. Si es lunes ni se te ocurra llamar
                 </p>
+            </div>
+
+            <div class="bloque">
+                <h2 class="letra-subtitulo">Sobre mí</h2>
+                <p class="tamanio-letra">
+                    Soy un gato naranja profesional en dormir, comer lasañas y evitar 
+                    cualquier tipo de esfuerzo innecesario. Me considero un experto en la vida
+                    cómoda, con más de 10 años de experiencia descansando en sofás, camas y cualquier
+                    superficie acolchada. Durante mi carrera he prefeccionado el arte de parecer ocupado sin hacer
+                    absolutamente nada. Si es lunes ni se te ocurra llamar.
+                </p>
+            </div>
         </div>
 
-        <div class="bloque">
-            <h2 class="letra-subtitulo">Referencias</h2>
+        <!-- Columna de la derecha -->
+        <div id="c2" class="columna derecha">
+
+            <div class="bloque">
+                <h2 class="letra-subtitulo">Referencias</h2>
                 <table>
                     <!-- titulos de la tabla -->
                     <tr>
@@ -86,16 +87,24 @@
                         <td class="tamanio-letra">La nevera</td>
                         <td> <img src="nevera.webp" alt="odie" width="50" height="75"></td>
                         <td class="style">Siempre vuelve a mí, soy como un imán para este gato naranja.</td>
-                    </tr>
-                    
+                    </tr>   
                 </table>
-        </div>
+            </div>
 
-        <div> 
-            <h2 class="letra-subtitulo">Fotos o insignias o videos</h2>
-        </div>
+            <div class="bloque"> 
+                <h2 class="letra-subtitulo">Cosas que odio</h2>
+                <ul>
+                    <li class="tamanio-letra">Los lunes</li>
+                    <li class="tamanio-letra">Las dietas</li>
+                    <li class="tamanio-letra">El veterinario</li>
+                    <li class="tamanio-letra">Hacer ejercicio</li>
+                    <li class="tamanio-letra">Que me despierten de mi siesta</li>
+                </ul>
+            </div>
 
-    </div>
+        </div> <!-- Cierre columna de la derecha -->
+    </div> <!-- Cierre de la fila -->
+
 </body>
 
 </html>

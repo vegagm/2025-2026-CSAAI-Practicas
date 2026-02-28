@@ -4,28 +4,13 @@ durriculum de Garfield */
 * {
     box-sizing: border-box;
   }
-  
-/* Crear columnas de ancho diferente que se colocan una a continuación de la otra */
-/* .columna {
-float: left;
-padding: 10px;
-min-height: 500px;
-} */
 
 .izquierda {
 width: 25%;
 }
-
 .derecha {
 width: 75%;
 }
-
-/* Clear floats despues de las columnas para eliminar la superposición */
-/* .filla:after {
-content: "";
-display: table;
-clear: both;
-} */
 
 /* Queremos que la foto del principio de garfiel tenga formato de
 curriculum para ello lo hacemos en circulo */
@@ -47,14 +32,6 @@ se vea la imagen */
 #c1, #c2 {
     background-color: rgb(255, 255, 255, 0.85);
 }
-
-/* estilos para imágenes https://www.w3schools.com/css/css3_images.asp */
-/* posicionamiento de imágenes https://www.w3schools.com/css/css_positioning.asp */
-
-/* .img {
-    width: 100%;
-    height: auto;
-}  */
 
 .iresponsive {
     padding: 0 6px;
@@ -226,6 +203,12 @@ html, body {
     font-size:23px;
     font-weight: 600;
     color:rgb(255, 255, 255);
+}
+.card img {
+    width: 100%;   /*Ocupamos el ancho de la card */
+    height: 200px;  /*Altura fija para todas las imagene*/
+    object-fit: cover;   /*recortamos la imagen sin deformarla*/
+    border-radius: 8px;
 }
 
 /* Más sobre diseño web responsive https://www.w3schools.com/css/css_rwd_intro.asp */

@@ -5,12 +5,12 @@ durriculum de Garfield */
     box-sizing: border-box;
   }
 
-.izquierda {
+/* .izquierda {
 width: 25%;
 }
 .derecha {
 width: 75%;
-}
+} */
 
 /* Queremos que la foto del principio de garfiel tenga formato de
 curriculum para ello lo hacemos en circulo */
@@ -29,7 +29,7 @@ curriculum para ello lo hacemos en circulo */
 /*Hacemos un fondo blanco un poco tranparente, para que 
 se vea la imagen */
 
-#c1, #c2 {
+#c1, #c2, #c3 {
     background-color: rgb(255, 255, 255, 0.85);
 }
 
@@ -202,7 +202,7 @@ html, body {
 .subtitulo-proyectos {
     font-size:23px;
     font-weight: 600;
-    color:rgb(255, 255, 255);
+    color:rgb(0, 0, 0);
 }
 .card img {
     width: 100%;   /*Ocupamos el ancho de la card */

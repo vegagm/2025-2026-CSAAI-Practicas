@@ -121,6 +121,9 @@ body {
 .derecha {
     width: 75%;
 }
+.tercera {
+    width: 75%;
+}
 /* hacemos que cada seccion quede separada y ordenada */
 .bloque {
     margin-bottom: 20px;

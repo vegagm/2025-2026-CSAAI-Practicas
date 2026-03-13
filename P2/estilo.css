@@ -1,0 +1,10 @@
+
+/* lo ajustamos para el movil las columnas */
+@media screen and (max-width: 600px) {
+    .fila{
+        flex-direction: column;
+    }
+    .izquierda,.derecha {
+        width: 100%;
+    }
+}

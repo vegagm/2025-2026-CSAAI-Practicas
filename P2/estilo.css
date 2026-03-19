@@ -8,3 +8,64 @@
         width: 100%;
     }
 }
+
+body {
+    background-color:Arial;
+    background-image:center;
+    background-repeat: ;
+    background-position: ;
+    margin: ;
+    font-family: ;
+}
+
+h1 {
+    font-family: ;
+    font-size: ;
+    text-align: ;
+    padding: ;
+    margin: ;
+    margin-bottom: ;
+    color: ;
+    text-shadow: ;
+}
+
+.cronometro {
+    border-radius:10px;
+    text-align: center;
+    font-family: ;
+    font-size:40px;
+    width:32%;
+    padding:0%;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.casilla {
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ;
+    border-radius: 10px;
+}
+
+#botones {
+margin-top: 20px;
+}
+
+#botones button {
+    margin: 5px;
+    padding: 35px;
+    font-size: 20px;
+    border-radius: 1px;
+    cursor: pointer;
+}
+
+#botones button {
+    background: ;
+    cursor: not-allowed;
+}

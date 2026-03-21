@@ -5,13 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>BOOM</title>
 
-        <!-- Hoja de estilo externa -->
+        <!-- Hoja de estilo externa CSS -->
         <link rel="stylesheet" href="estilo.css">
+
+        <!-- Hoja de javascript externa JS -->
         <script src="crono.js" defer></script>
+        <script src="script.js" defer></script>
     </head>
 <body>
     <h1>BOOM</h1>
 
+    <!-- CLAVE -->
     <div id="clave">
         <div class="casilla">*</div>
         <div class="casilla">*</div>
@@ -19,40 +23,48 @@
         <div class="casilla">*</div>
     </div>
 
-    <p>Numero de Intentos: <div id="intentos">3</div></p>
-    <p>Tiempo: <div id="tiempo">0</div></p>
+    <!-- INFO -->
+    <!-- <p>Intentos restantes: <div id="intentos">7</div></p> -->
+    <!-- <p>Tiempo: <div id="tiempo">0</div></p> -->
+    <p>Intentos restantes: <span id="intentos">7</span></p>
+    <p>Tiempo: <span id="tiempo">00:00:00</span></p>
 
-    <div id="botones">
-        <button class="digito">7</button>
-        <button class="digito">8</button>
-        <button class="digito">9</button>
-    </div>
+    <p id="mensaje">Nueva partida preparada</p>
 
-    <div id="botones">
-        <button class="digito">4</button>
-        <button class="digito">5</button>
-        <button class="digito">6</button>
-    </div>
 
-    <div id="botones">
-        <button class="digito">1</button>
-        <button class="digito">2</button>
-        <button class="digito">3</button>
-    </div>
+    <!-- BOTONES NUMÉRICOS -->
+    <div id="botones"> <!-- Comienzo botones -->
+        <div id="fila">
+            <button class="digito">7</button>
+            <button class="digito">8</button>
+            <button class="digito">9</button>
+        </div>
 
-    <div id="botones">
-        <button></button>
-        <button class="digito">0</button>
-        <button></button>
-    </div>
+        <div id="fila">
+            <button class="digito">4</button>
+            <button class="digito">5</button>
+            <button class="digito">6</button>
+        </div>
 
-    <div id="botones">
-        <button class="digito">Start</button>
-        <button class="digito">Stop</button>
-        <button class="digito">Reset</button>
-    </div>
+        <div id="fila">
+            <button class="digito">1</button>
+            <button class="digito">2</button>
+            <button class="digito">3</button>
+        </div>
 
-    
+        <div id="fila">
+            <button></button>
+            <button class="digito">0</button>
+            <button></button>
+        </div>
+    </div> <!--Fin botones -->
+
+    <!-- CONTROLES -->
+    <div id="controles">  <!-- Comienzo controles -->
+        <button class="start">Start</button>
+        <button class="stop">Stop</button>
+        <button class="reset">Reset</button>
+    </div>  <!-- Fin controles -->   
     
 </body>
 </html>

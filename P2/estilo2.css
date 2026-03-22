@@ -1,0 +1,90 @@
+body {
+    background-image: url(fondo_naranja.avif);
+    background-color: black;
+    color: #00ff00;
+    font-family: monospace;
+    text-align: center;
+}
+
+.titulo {
+    font-family: monospace;
+    text-align: center;
+    color: #00ff00;
+    letter-spacing: 10px;
+}
+
+.cajaprincipal {
+    border: 2px solid #00ff00;
+    padding: 20px;
+    width: 300px;
+    margin: auto;
+}
+
+.cajacontador {
+    border: 2px solid;
+    color: #00ff00;
+    padding: 10px;
+    margin-top: 10px;
+    /* background-color: ; */
+}
+
+.cajanumero {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #00ff00;
+    margin: 5px;
+    line-height: 50px;
+    font-size: 25px;
+    color: red;
+}
+
+.fila {
+    margin: 5px;
+}
+
+.tecla {
+    width: 60px;
+    height: 40px;
+    margin: 3px;
+    background-color: black;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 5px #00ff00;
+}
+
+/* Efecto de pasar el raton */
+.tecla:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00;
+    cursor: pointer;
+}
+
+/* Efecto al hacer click */
+.tecla:active {
+    transform: translateY(2px) scale(0.95);
+    box-shadow: 0 0 5px #00ff00;
+}
+
+.tecla:disabled {
+    background-color: #222;
+    color: gray;
+}
+
+#start, #stop, #reset {
+    width: 80px;
+    margin: 5px;
+}
+
+
+
+/* lo ajustamos para el movil las columnas */
+@media screen and (max-width: 600px) {
+    .fila{
+        flex-direction: column;
+    }
+    .izquierda,.derecha {
+        width: 100%;
+    }
+}

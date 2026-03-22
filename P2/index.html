@@ -1,70 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BOOM</title>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOM</title>
 
-        <!-- Hoja de estilo externa CSS -->
-        <link rel="stylesheet" href="estilo.css">
+    <!-- Hoja de estilo externa CSS -->
+    <link rel="stylesheet" href="estilo.css">
 
-        <!-- Hoja de javascript externa JS -->
-        <script src="crono.js" defer></script>
-        <script src="script.js" defer></script>
-    </head>
-<body>
-    <h1>BOOM</h1>
+    <link rel="icon" href="icono.ico" type="image/x-icon">
 
-    <!-- CLAVE -->
-    <div id="clave">
-        <div class="casilla">*</div>
-        <div class="casilla">*</div>
-        <div class="casilla">*</div>
-        <div class="casilla">*</div>
-    </div>
-
-    <!-- INFO -->
-    <!-- <p>Intentos restantes: <div id="intentos">7</div></p> -->
-    <!-- <p>Tiempo: <div id="tiempo">0</div></p> -->
-    <p>Intentos restantes: <span id="intentos">7</span></p>
-    <p>Tiempo: <span id="tiempo">00:00:00</span></p>
-
-    <p id="mensaje">Nueva partida preparada</p>
-
-
-    <!-- BOTONES NUMÉRICOS -->
-    <div id="botones"> <!-- Comienzo botones -->
-        <div id="fila">
-            <button class="digito">7</button>
-            <button class="digito">8</button>
-            <button class="digito">9</button>
-        </div>
-
-        <div id="fila">
-            <button class="digito">4</button>
-            <button class="digito">5</button>
-            <button class="digito">6</button>
-        </div>
-
-        <div id="fila">
-            <button class="digito">1</button>
-            <button class="digito">2</button>
-            <button class="digito">3</button>
-        </div>
-
-        <div id="fila">
-            <button></button>
-            <button class="digito">0</button>
-            <button></button>
-        </div>
-    </div> <!--Fin botones -->
-
-    <!-- CONTROLES -->
-    <div id="controles">  <!-- Comienzo controles -->
-        <button class="start">Start</button>
-        <button class="stop">Stop</button>
-        <button class="reset">Reset</button>
-    </div>  <!-- Fin controles -->   
+    <!-- Hoja de javascript externa JS -->
+    <script src="script.js" defer></script>
+    <script src="crono.js" defer></script>
     
+</head>
+<body>
+
+    <h1 class="titulo">BOOM</h1>
+    
+    <!-- Recuadro principal -->
+    <div class="cajaprincipal">
+
+        <div class="cajacontador">
+
+
+            <div class="cajanumero">
+                <p id="clave1">*</p>
+            </div> <!--Fin caja numero-->
+
+            <div class="cajanumero">
+                <p id="clave2">*</p>
+            </div> <!--Fin caja numero-->
+
+            <div class="cajanumero">
+                <p id="clave3">*</p>
+            </div> <!--Fin caja numero-->
+
+            <div class="cajanumero">
+                <p id="clave4">*</p>
+            </div> <!--Fin caja numero-->
+
+            <p></p>  <!--OTRA FORMA EN FICHERO EXTERNO-->
+            <h1 class="cronometro" style="padding-top: 30px;" id="display">0:0:0</h1>
+
+            <p>
+                Intentos restantes: <span id="intentos">7</span>
+            </p>
+        </div> <!--Fin caja contador-->
+
+
+        <div class="cajacontador"> <!--Caja contador 2-->
+            <div class="caja">
+                <button class="tecla" id="tecla1">1</button>
+                <button class="tecla" id="tecla2">2</button>
+                <button class="tecla" id="tecla3">3</button>
+            </div> <!--Fin caja-->
+
+            <div class="caja">
+                <button class="tecla" id="tecla4">4</button>
+                <button class="tecla" id="tecla5">5</button>
+                <button class="tecla" id="tecla6">6</button>
+            </div> <!--Fin caja-->
+
+            <div class="caja">
+                <button class="tecla" id="tecla7">7</button>
+                <button class="tecla" id="tecla8">8</button>
+                <button class="tecla" id="tecla9">9</button>
+            </div> <!--Fin caja-->
+
+            <div class="caja">
+                <button class="tecla" id="botonsecreto1">-</button>
+                <button class="tecla" id="tecla0">0</button>
+                <button class="tecla" id="botonsecreto2">-</button>
+            </div> <!--Fin caja-->
+
+            <div class="caja">
+                <button class="tecla" id="start" style="font-size: xx-small;">Start</button>
+                <button class="tecla" id="stop" style="font-size: xx-small;">Stop</button>
+                <button class="tecla" id="reset" style="font-size: xx-small;">Reset</button>
+            </div> <!--Fin caja-->
+
+            <p style="color: rgba(red, green, blue, alpha)">.</p>
+        </div> <!--Fin caja contador 2-->
+
+    </div> <!--Fin caja principal-->
+       
 </body>
 </html>

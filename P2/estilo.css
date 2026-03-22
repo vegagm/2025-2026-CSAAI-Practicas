@@ -9,60 +9,87 @@
     }
 }
 
-body {
-    background: black;
-    color:#00ff00;
+* {
+    box-sizing: border-box;
+}
+
+.titulo {
     font-family: monospace;
+    margin: 0;
+    text-shadow: 0 0 5px red, 0 0 15px red, 0 0 30px red;
     text-align: center;
+    color: white;
+    -webkit-text-stroke:1px rgb(100, 96,96) ;
 }
 
-h1 {
-    letter-spacing: 10px;
-    margin: 20px;
+body {
+    /* background-image: ; */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
-#clave{
-    border: 2px solid #00ff00;
-    padding: 20px;
-    margin: 20px;
+.cajaprincipal{
+    float: center;
+    padding: 10px;
+    min-height: 50px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 5px solid;
+    /* border-image: linear-gradien; */
+    width: 100%;
 }
 
-.casilla {
-    display: inline-block;
-    border: 2px solid #00ff00;
-    padding: 20px;
-    margin: 10px;
-    font-size: 30px;
-    color: red;
-    width: 50px;
+.cajacontador{
+    float: center;
+    padding: 5px;
+    min-height: 50px;
+    border-radius: 10px;
+    width: 100%;
+    color: white;
+    border: 5px solid;
+    background-color: rgba(0, 0, 0, 0.1);
+    min-height: 200px;
 }
 
-#botones{
-    margin: 20px;
+.cajanumero{
+    padding: 5px;
+    min-height: 50px;
+    border-radius: 5px;
+    width: 100%;
+    color: gray;
+    background-color: rgba(255, 0, 0, 0.3);
 }
 
-.fila{
-    display: flex;
-    justify-content: center;
-    margin: 10px;
+p{
+    color: yellowgreen;
+    font-weight: bold;
+    font-size: large;
+    text-align: center;
+    font-family: digital;
 }
 
-button{
-    background: black;
-    color: #00ff00;
-    border: 2px solid #00ff00;
-    padding: 15px;
-    margin: 5px;
-    font-size: 20px;
-    width: 80px;
-    cursor: pointer;
+.caja{
+    float: center;
 }
 
-button:disabled{
-    opacity: 0.3;
+.tecla{
+    padding: 5px;
+    min-height: 35px;
+    min-width: 38px;
+    border-radius: 10px;
+    width: 100%;
+    color: antiquewhite;
+    background-color: rgba(128, 128, 128, 0.1);
 }
 
-#controles button{
-    color: red;
-    border: 2px solid red;
+.cronometro{
+    text-align: center;
+    float: center;
 }
+
+
+
+

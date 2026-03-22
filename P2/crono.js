@@ -32,7 +32,7 @@ class Cronometro{
         }
 
         //-- Mostramos el valor 
-        this.display.innerHTML == this.min + ":" + this.seg + ":" + this.cent
+        this.display.innerHTML = this.min + ":" + this.seg + ":" + this.cent
     } //-- Fin tic
 
     //-- Arrancamos el cronometro

@@ -10,62 +10,59 @@
 }
 
 body {
-    background-color:Arial;
-    background-image:center;
-    background-repeat: ;
-    background-position: ;
-    margin: ;
-    font-family: ;
+    background: black;
+    color:#00ff00;
+    font-family: monospace;
+    text-align: center;
 }
 
 h1 {
-    font-family: ;
-    font-size: ;
-    text-align: ;
-    padding: ;
-    margin: ;
-    margin-bottom: ;
-    color: ;
-    text-shadow: ;
+    letter-spacing: 10px;
+    margin: 20px;
 }
 
-.cronometro {
-    border-radius:10px;
-    text-align: center;
-    font-family: ;
-    font-size:40px;
-    width:32%;
-    padding:0%;
-    margin-left: auto;
-    margin-right: auto;
-
+#clave{
+    border: 2px solid #00ff00;
+    padding: 20px;
+    margin: 20px;
 }
 
 .casilla {
-    width: 60px;
-    height: 60px;
+    display: inline-block;
+    border: 2px solid #00ff00;
+    padding: 20px;
     margin: 10px;
     font-size: 30px;
+    color: red;
+    width: 50px;
+}
+
+#botones{
+    margin: 20px;
+}
+
+.fila{
     display: flex;
-    align-items: center;
     justify-content: center;
-    background: ;
-    border-radius: 10px;
+    margin: 10px;
 }
 
-#botones {
-margin-top: 20px;
-}
-
-#botones button {
+button{
+    background: black;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    padding: 15px;
     margin: 5px;
-    padding: 35px;
     font-size: 20px;
-    border-radius: 1px;
+    width: 80px;
     cursor: pointer;
 }
 
-#botones button {
-    background: ;
-    cursor: not-allowed;
+button:disabled{
+    opacity: 0.3;
+}
+
+#controles button{
+    color: red;
+    border: 2px solid red;
 }

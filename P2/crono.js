@@ -1,39 +1,69 @@
 // Para gestionar el tiempo
 
-let tiempo = 0;
-let intervalo = null;
+class Cronometro{
 
+    //-- Constructor del objeto tenemos que 
+    //-- indicar el display donde mostrar el cronometro
+    constructor(display) {
+        this.display = display;
 
-// formateamos el tiempo a 00:00:00
-function formatearTiempo(segundos){
-    let h = Math.floor(segundos / 3600);
-    let m = Math.floor((segundos % 3600) / 60);
-    let s = segundos % 60;
+        //-- Tiempo
+        this.cent = 0, //-- Centesimas
+        this.seg = 0, //-- Segundos
+        this.min = 0, //-- Minutos
+        this.timer = 0; //-- Temporizador
+    } //-- Fin constructor
 
-    return `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    //-- Método para ejecutar cada centesima
+    tic() {
+        //-- Incrementamos es una centesima
+        this.cent += 1;
 
-}
+        //-- 100 centesimas hacen 1 seg
+        if(this.cent == 100){
+            this.seg += 1;
+            this.cent = 0;
+        }
 
-// iniciamos el cronómetro
-function iniciarCrono(){
+        //-- 60 segundos hacen un minuto
+        if(this.seg == 60){
+            this.min = 1;
+            this.seg = 0;
+        }
 
-    if(intervalo !== null) return;  //evitamos duplicados
+        //-- Mostramos el valor 
+        this.display.innerHTML == this.min + ":" + this.seg + ":" + this.cent
+    } //-- Fin tic
 
-    intervalo = setInterval( () => {
-        tiempo++;
-        document.getElementById("tiempo").textContent = formatearTiempo(tiempo);
-    }, 1000);
-}
+    //-- Arrancamos el cronometro
+    start(){
 
-// parar cronómetro
-function pararCrono(){
-    clearInterval(intervalo);
-    intervalo = null;
-}
+        if(!this.timer){
+            //-- Lanza el temporizador
+            //-- llama al metodo tic cada 10ms
+            this.timer = setInterval( () => {
+                this.tic();
+            }, 10);
+        }
+    } //-- Fin Start
 
-//resetear cronómetro
-function resetCrono(){
-    pararCrono();
-    tiempo = 0;
-    document.getElementById("tiempo").textContent = "00:00:00";
-}
+    //-- Paramos el cronómetro
+    stop(){
+
+        if(this.timer){
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+    } //-- Fin Stop
+
+    //-- Reseteamos el cronometro
+    reset(){
+
+        this.cent = 0;
+        this.seg = 0;
+        this.min = 0;
+
+        this.display.innerHTML = "0:0:0";
+    } //-- Fin Reset
+
+} //-- Fin clase cronometro

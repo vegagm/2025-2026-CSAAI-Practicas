@@ -5,7 +5,7 @@ Links directos a las practicas:
 
 Práctica 1 (Currículum): https://vegagm.github.io/2025-2026-CSAAI-Practicas/P1/index.html
 
-Práctica 2 ():
+Práctica 2 (Juego BOOM):https://vegagm.github.io/2025-2026-CSAAI-Practicas/P2/index.html
 
 Práctica 3 ():
 

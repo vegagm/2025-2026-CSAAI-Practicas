@@ -1,14 +1,13 @@
-// console.log("Acierta la contraseña")
-// alert("Acierta la clave antes de que explote 💣");
+/* jshint esversion: 6 */
+/* globals Cronometro */
 
 const mensaje = document.getElementById("mensaje");
-
 const display = document.getElementById("display");
 const crono = new Cronometro(display);
 
 const botones = document.querySelectorAll(".tecla");
-const intentosSpan = document.getElementById("intentos");
 
+const intentosSpan = document.getElementById("intentos");
 const casillas = [
     document.getElementById("c1"),
     document.getElementById("c2"),
@@ -56,6 +55,7 @@ function resetJuego() {
         c.style.color = "red";
     });
 
+    //-- Desbloqueamos todos los números
     botones.forEach(b => b.disabled = false);
     mensaje.innerText = "Nueva partida preparada. Pulsa Start o un número para comenzar.";
 
@@ -65,7 +65,6 @@ function resetJuego() {
 //-- click de los numeros
 botones.forEach(boton => {
     boton.onclick = () => {
-
         if (terminado) return; //--Añadimos
 
         if (!jugando) return;
@@ -140,14 +139,14 @@ document.getElementById("start").onclick = () => {
             botones.forEach(b => {
                 if(!b.id) { //--solo botones númericos
                     if(usados.includes(b.innerText)){
-                        b.disabled = true //-- mantener bloqueados
+                        b.disabled = true; //-- mantener bloqueados
                     } else{
                         b.disabled = false; //-- desbloquear los no usados
                     }
                 }
             });
             mensaje.innerText = "Cronómetro iniciado. ¡SUERTE!";
-        }
+        };
 
 document.getElementById("stop").onclick = () => {
             crono.stop();
@@ -161,7 +160,7 @@ document.getElementById("stop").onclick = () => {
             });
 
             mensaje.innerText = "Cronómetro detenido.";
-        }
+        };
 
 document.getElementById("reset").onclick = resetJuego;
 

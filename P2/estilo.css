@@ -1,0 +1,102 @@
+body {
+    background-image: url(fondonaranja3.avif);
+    /* background-color: rgb(226, 104, 4); */
+    /* color: #00ff00; */
+    font-family: monospace;
+    text-align: center;
+}
+
+.titulo {
+    text-shadow: 0 0 10px #222, 0 0 25px #eab414;
+    font-size: 60px;
+    font-family: monospace;
+    text-align: center;
+    color: whitesmoke;
+    letter-spacing: 10px;
+    transition: all 0.3s ease
+}
+
+.titulo:hover {
+    transform: translateY(-10px) scale(1.1);
+
+    text-shadow: 
+        0 0 15px #098494,
+        0 0 30px #0377e3,
+        0 0 50px #389ec6;
+    cursor: pointer;
+}
+
+.cajaprincipal {
+    border: 7px solid #6d0000;
+    padding: 20px;
+    width: 400px;
+    height: 500px;
+    margin: auto;
+}
+
+.cajacontador {
+    border: 7px solid;
+    color: #6d0000;
+    padding: 5px;
+    margin-top: 5px;
+    /* background-color: ; */
+}
+
+.cajanumero {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 7px solid #6d0000;
+    margin: 5px;
+    line-height: 50px;
+    font-size: 25px;
+    color: rgb(0, 153, 255);
+}
+
+.fila {
+    margin: 5px;
+}
+
+.tecla {
+    width: 60px;
+    height: 40px;
+    margin: 3px;
+    background-color: #6d0000;
+    color: #f4450a;
+    border: 2px solid #f4450a;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 5px #f4450a;
+}
+
+/* Efecto de pasar el raton */
+.tecla:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 0 15px #f4450a, 0 0 30px #f4450a;
+    cursor: pointer;
+}
+
+/* Efecto al hacer click */
+.tecla:active {
+    transform: translateY(2px) scale(0.95);
+    box-shadow: 0 0 5px #f4450a;
+}
+
+.tecla:disabled {
+    background-color: #222;
+    color: gray;
+}
+
+#start, #stop, #reset {
+    width: 80px;
+    margin: 5px;
+}
+
+/* lo ajustamos para el movil las columnas */
+@media screen and (max-width: 600px) {
+    .fila{
+        flex-direction: column;
+    }
+    .izquierda,.derecha {
+        width: 100%;
+    }
+}

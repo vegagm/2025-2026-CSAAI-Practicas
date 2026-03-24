@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>BOOM</title>
+    <link rel="icon" href="bomba_confondo.avif" type="image/x-icon">
+
+    <link rel="stylesheet" href="estilo.css">
+    <script src="crono.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+<h1 class="titulo">BOOM</h1>
+
+<div class="cajaprincipal">
+
+    <!-- CLAVE -->
+    <div class="cajacontador">
+
+        <div class="cajanumero" id="c1">*</div>
+        <div class="cajanumero" id="c2">*</div>
+        <div class="cajanumero" id="c3">*</div>
+        <div class="cajanumero" id="c4">*</div>
+
+        <h2 id="display">0:0:0</h2>
+
+        <p>Intentos restantes: <span id="intentos">7</span></p>
+
+    </div> <!--Fin caja contador-->
+
+    <!-- BOTONES -->
+    <div class="cajacontador">
+
+        <div class="fila">
+            <button class="tecla">7</button>
+            <button class="tecla">8</button>
+            <button class="tecla">9</button>
+        </div>
+
+        <div class="fila">
+            <button class="tecla">4</button>
+            <button class="tecla">5</button>
+            <button class="tecla">6</button>
+        </div>
+
+        <div class="fila">
+            <button class="tecla">1</button>
+            <button class="tecla">2</button>
+            <button class="tecla">3</button>
+        </div>
+
+        <div class="fila">
+            <button disabled></button>
+            <button class="tecla">0</button>
+            <button disabled></button>
+        </div>
+
+        <div class="fila">
+            <button class="tecla" id="start">Start</button>
+            <button class="tecla" id="stop">Stop</button>
+            <button class="tecla" id="reset">Reset</button>
+        </div>
+
+    </div> <!--Fin caja contador-->
+
+</div> <!--Fin caja principal-->
+
+</body>
+</html>

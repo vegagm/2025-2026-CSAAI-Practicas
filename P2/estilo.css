@@ -30,7 +30,8 @@ body {
     border: 7px solid #6d0000;
     padding: 20px;
     width: 400px;
-    height: 500px;
+    /* height: 700px; */
+    height: fit-content;
     margin: auto;
 }
 
@@ -39,7 +40,7 @@ body {
     color: #6d0000;
     padding: 5px;
     margin-top: 5px;
-    /* background-color: ; */
+    height: fit-content;
 }
 
 .cajanumero {
@@ -89,6 +90,12 @@ body {
 #start, #stop, #reset {
     width: 80px;
     margin: 5px;
+}
+
+#mensaje{
+    margin-top: 10px;
+    font-size: 16px;
+    color: whitesmoke;
 }
 
 /* lo ajustamos para el movil las columnas */

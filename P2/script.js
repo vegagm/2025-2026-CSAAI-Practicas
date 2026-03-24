@@ -1,5 +1,7 @@
-console.log("Acierta la contraseña")
-alert("Acierta la clave antes de que explote 💣");
+// console.log("Acierta la contraseña")
+// alert("Acierta la clave antes de que explote 💣");
+
+const mensaje = document.getElementById("mensaje");
 
 const display = document.getElementById("display");
 const crono = new Cronometro(display);
@@ -51,6 +53,7 @@ function resetJuego() {
     });
 
     botones.forEach(b => b.disabled = false);
+    mensaje.innerText = "Nueva partida preparada. Pulsa Start o un número para comenzar.";
 
     crono.reset();
 }
@@ -78,6 +81,8 @@ botones.forEach(boton => {
                 casillas[i].style.color = "#000000";
                 acierto = true;
                 aciertos++;
+
+                mensaje.innerText = "Has acertado el número {numero}.Sigue así.";
             }
         });
 
@@ -89,6 +94,9 @@ botones.forEach(boton => {
             jugando = false;
             crono.stop();
 
+            // mensaje.innerText = "¡Clave descubierta!" +" Tiempo: " + tiempo + "Intentos consumidos: " + (7 - intentos) + "Intentos restantes:" + intentos;
+            mensaje.innerText = `¡Clave descubierta! Tiempo: ${tiempo} | Intentos consumidos: ${7 - intentos} | Intentos restantes: ${intentos}`;
+            
             alert(
                 "🎉 GANASTE\n" +
                 "Tiempo: " + display.innerText + "\n" +
@@ -105,14 +113,25 @@ botones.forEach(boton => {
                 c.innerText = clave[i];
             });
 
+            mensaje.innerText = "BOOM. Has agotado los intentos. La clave correcta era {}. Pulsa Reset para jugar otra vez.";
+
             alert("💣 BOOM\nHas perdido\nClave: " + clave.join("-"));
         }
     };
 });
 
 //-- Botones de control
-document.getElementById("start").onclick = () => crono.start();
-document.getElementById("stop").onclick = () => crono.stop();
+// document.getElementById("start").onclick = () => crono.start();
+// document.getElementById("stop").onclick = () => crono.stop();
+
+document.getElementById("start").onclick = () => {
+            crono.start();
+            mensaje.innerText = "Cronómetro iniciado. ¡SUERTE!";
+        }
+document.getElementById("stop").onclick = () => {
+            crono.stop();
+            mensaje.innerText = "Cronómetro detenido.";
+        }
 document.getElementById("reset").onclick = resetJuego;
 
 // Inicio

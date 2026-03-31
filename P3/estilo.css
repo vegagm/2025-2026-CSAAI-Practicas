@@ -1,0 +1,45 @@
+body {
+    background: black;
+    color: antiquewhite;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+canvas {
+    background: #000011;
+    border: 2px solid white;
+    display: block;
+    margin: 20px auto;
+}
+
+h1 {
+    margin-top: 10px;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.controls {
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 18px;
+}
+
+
+
+/* lo ajustamos para el movil las columnas */
+@media screen and (max-width: 600px) {
+    .fila{
+        flex-direction: column;
+    }
+    .izquierda,.derecha {
+        width: 100%;
+    }
+}

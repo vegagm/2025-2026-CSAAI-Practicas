@@ -20,16 +20,36 @@
     <canvas id="gameCanvas"></canvas>
 </div>
 
-<div class="boton-container">
+<!-- <div class="boton-container">
     <button id="botonizquierda" class="boton">&larr;</button>
     <button id="botonderecha" class="boton">&larr;</button>
     <button id="botondisparar" class="boton">&larr;</button>
     <button id="botonreiniciar" class="boton" onclick="window.location.href='https://vegagm.github.io/2025-2026-CSAAI-Practicas/P3/'">Menú</button>
+</div> -->
 
+<div class="controles">
 
-    <button id="shootBtn">DISPARAR</button>
-    <button id="rightBtn"></button>
+    <!-- IZQUIERDA -->
+    <div class="lado-izquierdo">
+        <button id="botonizquierda" class="boton">⬅</button>
+        <button id="botonderecha" class="boton">➡</button>
+    </div>
+
+    <!-- DERECHO -->
+    <div class="lado-derecho">
+        <button id="botondisparar" class="boton disparo"> 🔥 </button>
+    </div>
+
 </div>
+
+<!-- MENÚ ABAJO -->
+<div class="menu-container">
+    <button id="botonreiniciar" class="boton menu"
+        onclick="window.location.href='https://vegagm.github.io/2025-2026-CSAAI-Practicas/P3/'">
+        Menú
+    </button>
+</div>
+
 
 <p id="info"></p>
     

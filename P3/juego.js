@@ -30,9 +30,9 @@ document.addEventListener("keyup", e => {
 // document.addEventListener("keyup", e => keys[e.code] = false);
 
 //--Botones móvil
-document.getElementById("leftBtn").onclick = () => player.x -= 30;
-document.getElementById("rightBtn").onclick = () => player.x += 30;
-document.getElementById("shootBtn").onclick = shoot;
+document.getElementById("botonizquierda").onclick = () => player.x -= 30;
+document.getElementById("botonderecha").onclick = () => player.x += 30;
+document.getElementById("botondisparar").onclick = shoot;
 
 //--Jugador
 class Player {

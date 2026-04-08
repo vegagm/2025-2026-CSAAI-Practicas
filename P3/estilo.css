@@ -22,14 +22,55 @@ h1 {
     margin: 20px;
 }
 
-.controls {
-    margin-top: 10px;
+/* Contenedor principal */
+.controles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 20px auto;
 }
 
-button {
-    padding: 10px;
-    margin: 5px;
-    font-size: 18px;
+/* Lado izquierdo (flechas) */
+.lado-izquierdo {
+    display: flex;
+    gap: 15px;
+}
+
+/* Lado derecho (disparo) */
+.lado-derecho {
+    display: flex;
+}
+
+/* BOTONES GENERALES */
+.boton {
+    padding: 15px 20px;
+    font-size: 20px;
+    background: #222;
+    color: white;
+    border: 2px solid white;
+    border-radius: 2px;
+}
+.boton:active {
+    transform: scale(0.9);
+}
+
+/* Boton disparo */
+.disparo {
+    background: rgba(253, 203, 103, 0.846);
+    font-size: 24px;
+    padding: 20px 25px;
+}
+
+/* menu */
+.menu-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.menu {
+    background: rgb(95, 175, 249);
 }
 
 

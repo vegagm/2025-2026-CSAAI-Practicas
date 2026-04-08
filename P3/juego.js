@@ -1,6 +1,9 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// const nave = new Image();
+// nave.src = "nave-sinfondo.png"
+
 // canvas.width = window.innerWidth;
 // canvas.height = window.innerHeight;
 
@@ -38,13 +41,16 @@ document.getElementById("botondisparar").onclick = shoot;
 class Player {
     constructor() {
         this.width = 50;
-        this.height = 20;
+        this.height = 50;
         this.x = canvas.width / 2 - 25;
-        this.y = canvas.height - 50;
+        this.y = canvas.height - 60;
         this.speed = 6;
         this.lives = 3;
         this.energy = 5;
         this.maxEnergy = 5;
+
+        this.image = new Image();
+        this.image.src = "navesinfondo.png";
     }
 
     update() {
@@ -57,6 +63,12 @@ class Player {
     draw() {
         ctx.fillStyle = "cyan";
         ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        console.log(this.image.complete);
+
+        if (this.image.complete) {
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
     }
 }
 

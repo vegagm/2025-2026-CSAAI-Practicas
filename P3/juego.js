@@ -9,8 +9,25 @@ canvas.height = 600;
 
 //-- Teclado
 let keys = {};
-document.addEventListener("keydown", e => keys[e.code] = true);
-document.addEventListener("keyup", e => keys[e.code] = false);
+let shootPressed = false;
+
+document.addEventListener("keydown", e => {
+    keys[e.code] = true;
+
+    if (e.code === "Space" && !shootPressed) {
+        shoot();
+        shootPressed = true;
+    }
+});
+
+document.addEventListener("keyup", e => {
+    keys[e.code] = false;
+
+    if (e.code === "Space") shootPressed = false;
+});
+
+// document.addEventListener("keydown", e => keys[e.code] = true);
+// document.addEventListener("keyup", e => keys[e.code] = false);
 
 //--Botones móvil
 document.getElementById("leftBtn").onclick = () => player.x -= 30;
@@ -48,8 +65,8 @@ class Bullet {
     constructor(x, y, speed, color) {
         this.x = x;
         this.y = y;
-        this.width = 4;
-        this.height = 10;
+        this.width = 2;
+        this.height = 8;
         this.speed = speed;
         this.color = color;
     }
@@ -59,8 +76,13 @@ class Bullet {
     }
 
     draw() {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        // ctx.fillStyle = this.color;
+        // ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.strokeStyle = this.color;
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x, this.y + this.height);
+        ctx.stroke();
     }
 }
 
@@ -101,7 +123,7 @@ for (let row = 0; row < 3; row++) {
 //-- Disparo jugador
 function shoot() {
     if (player.energy > 0) {
-        bullets.push(new Bullet(player.x + 25, player.y, -8, "red"));
+        bullets.push(new Bullet(player.x + player.width / 2, player.y, -8, "red"));
         player.energy--;
     }
 }
@@ -112,12 +134,19 @@ setInterval(() => {
 }, 500);
 
 //-- Disparo del enemigo
+// setInterval(() => {
+//     if (aliens.length > 0) {
+//         let a = aliens[Math.floor(Math.random() * aliens.length)];
+//         enemyBullets.push(new Bullet(a.x + 20, a.y, 4, "yellow"));
+//     }
+// }, 1000);
+
 setInterval(() => {
-    if (aliens.length > 0) {
+    if (aliens.length > 0 && Math.random() < 0.7) {
         let a = aliens[Math.floor(Math.random() * aliens.length)];
-        enemyBullets.push(new Bullet(a.x + 20, a.y, 4, "yellow"));
+        enemyBullets.push(new Bullet(a.x + a.width / 2, a.y, 4, "yellow"));
     }
-}, 1000);
+}, 800);
 
 //-- Update
 function update() {
@@ -142,22 +171,21 @@ function update() {
         });
     });
 
-    enemyBullets.forEach((b,i) => {
-        b.update();
+    enemyBullets = enemyBullets.filter(b => {
+    b.update();
 
-        if (
-            b.x < player.x + player.width &&
-            b.x > player.x &&
-            b.y < player.y + player.height &&
-            b.y > player.y
-        ) {
-            enemyBullets.splice(i,1);
-            player.lives--;
+    if (
+        b.x < player.x + player.width &&
+        b.x > player.x &&
+        b.y < player.y + player.height &&
+        b.y > player.y
+    ) {
+        player.lives--;
+        if (player.lives <= 0) gameOver = true;
+        return false;
+    }
 
-            if (player.lives <= 0) {
-                gameOver = true;
-            }
-        }
+    return b.y < canvas.height;
     });
 
     //-- Movimiento de los aliens
@@ -193,7 +221,8 @@ function draw() {
     aliens.forEach(a => a.draw());
 
     ctx.fillStyle = "white";
-    ctx.fillText("Puntos: " + score, 10, 20);
+    ctx.font = "16px Arial";
+    ctx.fillText("Puntuación: " + score, 10, 20);
     ctx.fillText("Vidas: " + player.lives, 10, 40);
     ctx.fillText("Energía: " + player.energy, 10, 60);
     ctx.fillText("Tiempo: " + getTime(), 10, 80);

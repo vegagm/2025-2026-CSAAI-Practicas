@@ -217,16 +217,6 @@ function updateLivesUI() {
     }
 }
 
-// function endGame(win) {
-//     gameRunning = false;
-//     crono.stop();
-//     overlayEl.classList.remove('hidden');
-//     messageTextEl.innerText = win ? "¡VICTORIA!" : "GAME OVER";
-//     messageTextEl.style.color = win ? "#00ffcc" : "#ff4444";
-//     if (win) {
-//         saveRanking(currentUser, crono.min, crono.seg, crono.cent);
-//     }
-// }
 
 function endGame(win) {
     gameRunning = false;

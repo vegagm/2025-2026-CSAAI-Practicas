@@ -27,8 +27,8 @@ function cargarSonido(ruta) {
     return audio;
 }
 
-const shootSound = cargarSonido('disparo.mp3');
-const explosionSound = cargarSonido('explosion.mp3');
+const shootSound = cargarSonido('disparo.m4a');
+const explosionSound = cargarSonido('explosion.m4a');
 const gameOverSound = cargarSonido('gameover.mp3'); // Opcional
 
 // --- VARIABLES DE ESTADO ---

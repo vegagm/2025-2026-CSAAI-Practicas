@@ -2,18 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Invasión Alienígena: Mobile & PC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invasión Alienígena: Desafío Verde</title>
     <link rel="stylesheet" href="estilo.css">
     <script src="crono.js"></script>
     <script src="juego.js" defer></script>
 </head>
 <body>
-    <div id="selector-overlay">
+    <div id="login-overlay">
         <div class="selection-box">
-            <h2>Elige como jugar</h2>
-            <button id="btn-pc" class="boton">Ordenador (Teclado)</button>
-            <button id="btn-mobile" class="boton">Móvil (Táctil)</button>
+            <h2>IDENTIFÍCATE, COMANDANTE</h2>
+            <input type="text" id="username-input" placeholder="Nombre de usuario" maxlength="15">
+            <button id="btn-start" class="boton">INICIAR MISIÓN</button>
         </div>
     </div>
 
@@ -31,19 +31,23 @@
 
         <canvas id="gameCanvas"></canvas>
 
-        <div id="mobile-controls" class="hidden">
-            <div id="btn-left" class="touch-btn">◀</div>
-            <div id="btn-right" class="touch-btn">▶</div>
-            <div id="btn-shoot" class="touch-btn">FUEGO</div>
-        </div>
-
         <div id="message-overlay" class="hidden">
             <div id="message-content">
                 <p id="message-text"></p>
-                <button id="restart-button">Reiniciar</button>
+                
+                <div id="ranking-container" class="hidden">
+                    <h3>TOP 10 PILOTOS (MENOR TIEMPO)</h3>
+                    <table id="ranking-table">
+                        <thead>
+                            <tr><th>Pos</th><th>Nombre</th><th>Tiempo</th></tr>
+                        </thead>
+                        <tbody id="ranking-body"></tbody>
+                    </table>
+                </div>
+
+                <button id="restart-button" onclick="window.location.href='https://vegagm.github.io/2025-2026-CSAAI-Practicas/P3/'">Restart</button>
             </div>
         </div>
     </div>
-    <!-- <script src="juego2.js" defer></script> -->
 </body>
 </html>

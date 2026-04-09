@@ -96,8 +96,8 @@ function initGame() {
 function update() {
     if (!gameRunning) return;
 
-    if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
-    if (keys['ArrowRight'] && player.x < canvas.width - player.w) player.x += player.speed;
+    if (keys.ArrowLeft && player.x > 0) player.x -= player.speed;
+if (keys.ArrowRight && player.x < canvas.width - player.w) player.x += player.speed;
 
     if (energy < 100) energy += ENERGY_RECOVERY;
     energyBar.style.width = energy + '%';

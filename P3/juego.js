@@ -40,13 +40,25 @@ const keys = {};
 const ENERGY_COST = 20;
 const ENERGY_RECOVERY = 0.4;
 
-// --- GESTIÓN DE INICIO ---
+// --- GESTIÓN DE INICIO MEJORADA ---
 btnStart.addEventListener('click', () => {
     const name = usernameInput.value.trim();
     if (name.length < 3) {
         alert("Comandante, introduzca un nombre válido (mín. 3 letras)");
         return;
     }
+
+    // "DESPERTAR" AUDIOS PARA EL NAVEGADOR
+    // Esto desbloquea los permisos de audio en Chrome/Safari
+    [shootSound, explosionSound, gameOverSound, victoriaSound].forEach(s => {
+        s.play().then(() => {
+            s.pause();
+            s.currentTime = 0;
+        }).catch(() => {
+            console.log("Audio esperando interacción real...");
+        });
+    });
+
     currentUser = name;
     loginOverlay.classList.add('hidden');
     initGame();
@@ -221,28 +233,22 @@ function endGame(win) {
     crono.stop();
     overlayEl.classList.remove('hidden');
     
-    // Configuramos el mensaje y el color
     if (win) {
         messageTextEl.innerText = "¡VICTORIA!";
         messageTextEl.style.color = "#00ffcc";
         
-        // REPRODUCIR SONIDO DE VICTORIA
-        if (victoriaSound.readyState >= 2) {
-            victoriaSound.currentTime = 0;
-            victoriaSound.play().catch(() => {});
-        }
+        // Forzamos reproducción
+        victoriaSound.currentTime = 0;
+        victoriaSound.play().catch(e => console.error("Error victoria:", e));
         
-        // Guardamos en el ranking
         saveRanking(currentUser, crono.min, crono.seg, crono.cent);
     } else {
         messageTextEl.innerText = "GAME OVER";
         messageTextEl.style.color = "#ff4444";
         
-        // REPRODUCIR SONIDO DE GAME OVER
-        if (gameOverSound.readyState >= 2) {
-            gameOverSound.currentTime = 0;
-            gameOverSound.play().catch(() => {});
-        }
+        // Forzamos reproducción
+        gameOverSound.currentTime = 0;
+        gameOverSound.play().catch(e => console.error("Error gameover:", e));
     }
 }
 

@@ -15,9 +15,21 @@ const crono = new Cronometro(timerDisplay);
 canvas.width = 800;
 canvas.height = 600;
 
-// --- RECURSOS ---
+// --- RECURSOS (CON CONTROL DE ERRORES) ---
 const playerImg = new Image(); playerImg.src = 'nave.png';
 const alienImg = new Image(); alienImg.src = 'alien_verde.png';
+const explosionImg = new Image(); explosionImg.src = 'explosion.png';
+
+// Función para cargar sonidos de forma segura
+function cargarSonido(ruta) {
+    const audio = new Audio(ruta);
+    audio.addEventListener('error', () => console.warn(`No se pudo cargar el sonido: ${ruta}. El juego continuará en silencio.`));
+    return audio;
+}
+
+const shootSound = cargarSonido('disparo.mp3');
+const explosionSound = cargarSonido('explosion.mp3');
+const gameOverSound = cargarSonido('gameover.mp3'); // Opcional
 
 // --- VARIABLES DE ESTADO ---
 let score, lives, energy, gameRunning, currentUser;
@@ -37,20 +49,18 @@ btnStart.addEventListener('click', () => {
     currentUser = name;
     loginOverlay.classList.add('hidden');
     initGame();
-    // Importante: Llamamos a update() solo una vez aquí para que empiece el bucle
     requestAnimationFrame(update);
 });
 
 function initGame() {
     score = 0; lives = 3; energy = 100; 
-    alienSpeed = 0.7; // Empezamos lento
+    alienSpeed = 0.7; 
     alienDirection = 1; 
     gameRunning = true;
 
     player = { x: 370, y: 520, w: 60, h: 60, speed: 6 };
     bullets = []; enemyBullets = []; explosions = []; aliens = [];
     
-    // Generar 3 filas de 8 marcianos (TODOS VERDES)
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 8; j++) {
             aliens.push({ 
@@ -70,37 +80,29 @@ function initGame() {
     crono.start();
 }
 
-// --- LÓGICA DE DIFICULTAD PROGRESIVA ---
 function update() {
     if (!gameRunning) return;
 
-    // Movimiento Nave
     if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
     if (keys['ArrowRight'] && player.x < canvas.width - player.w) player.x += player.speed;
 
-    // Energía Arma
     if (energy < 100) energy += ENERGY_RECOVERY;
     energyBar.style.width = energy + '%';
 
-    // Balas Jugador
     bullets.forEach((b, i) => { b.y -= 9; if (b.y < 0) bullets.splice(i, 1); });
 
-    // --- PROGRESIÓN ---
-    const totalAliens = 24;
     const aliveAliens = aliens.filter(a => a.alive);
-    const numEliminados = totalAliens - aliveAliens.length;
+    const numEliminados = 24 - aliveAliens.length;
 
-    // Aumentar velocidad y frecuencia de disparo según eliminados
-    let factorDificultad = 1 + (numEliminados * 0.05); // Aumenta un 5% por cada alien muerto
+    let factorDificultad = 1 + (numEliminados * 0.05); 
     let velocidadActual = alienSpeed * factorDificultad;
-    let probabilidadDisparo = 0.01 + (numEliminados * 0.002); // Disparan más a menudo
+    let probabilidadDisparo = 0.01 + (numEliminados * 0.002); 
 
-    // Movimiento Aliens
     let tocaBorde = false;
     aliveAliens.forEach(a => {
         a.x += velocidadActual * alienDirection;
         if (a.x <= 10 || a.x + a.w >= canvas.width - 10) tocaBorde = true;
-        if (a.y + a.h >= player.y) endGame(false); // Derrota por invasión
+        if (a.y + a.h >= player.y) endGame(false); 
     });
 
     if (tocaBorde) {
@@ -108,13 +110,11 @@ function update() {
         aliens.forEach(a => a.y += 15);
     }
 
-    // Disparos Enemigos Progresivos
     if (Math.random() < probabilidadDisparo && aliveAliens.length > 0) {
         const shooter = aliveAliens[Math.floor(Math.random() * aliveAliens.length)];
         enemyBullets.push({ x: shooter.x + shooter.w/2, y: shooter.y + shooter.h, w: 4, h: 12 });
     }
 
-    // Balas Enemigas -> Jugador
     enemyBullets.forEach((eb, i) => {
         eb.y += 4;
         if (eb.y > canvas.height) enemyBullets.splice(i, 1);
@@ -126,7 +126,6 @@ function update() {
         }
     });
 
-    // Balas Jugador -> Alien
     bullets.forEach((b, bi) => {
         aliens.forEach(a => {
             if (a.alive && b.x < a.x + a.w && b.x + b.w > a.x && b.y < a.y + a.h && b.y + b.h > a.y) {
@@ -134,7 +133,15 @@ function update() {
                 bullets.splice(bi, 1);
                 score += 10;
                 scoreEl.innerText = score;
-                explosions.push({x: a.x, y: a.y, timer: 15});
+                
+                explosions.push({x: a.x, y: a.y, w: a.w, h: a.h, timer: 15});
+                
+                // Reproducción segura de sonido
+                if (explosionSound.readyState >= 2) {
+                    explosionSound.currentTime = 0;
+                    explosionSound.play().catch(()=>{});
+                }
+                
                 if (aliens.filter(al => al.alive).length === 0) endGame(true);
             }
         });
@@ -146,25 +153,43 @@ function update() {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Dibujar Nave
     ctx.drawImage(playerImg, player.x, player.y, player.w, player.h);
+    
+    // Dibujar Aliens
     aliens.forEach(a => { if (a.alive) ctx.drawImage(alienImg, a.x, a.y, a.w, a.h); });
+    
+    // Balas
     ctx.fillStyle = "#00ffcc"; bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
     ctx.fillStyle = "#ff4444"; enemyBullets.forEach(eb => ctx.fillRect(eb.x, eb.y, eb.w, eb.h));
     
+    // Explosiones
     explosions.forEach((ex, i) => {
-        ctx.fillStyle = "rgba(255, 165, 0, " + (ex.timer / 15) + ")";
-        ctx.beginPath(); ctx.arc(ex.x + 20, ex.y + 15, 20, 0, Math.PI*2); ctx.fill();
-        ex.timer--; if (ex.timer <= 0) explosions.splice(i, 1);
+        if (explosionImg.complete && explosionImg.naturalWidth !== 0) {
+            ctx.drawImage(explosionImg, ex.x, ex.y, ex.w, ex.h);
+        } else {
+            // Círculo naranja de respaldo si la imagen falla
+            ctx.fillStyle = "orange";
+            ctx.beginPath(); ctx.arc(ex.x + ex.w/2, ex.y + ex.h/2, 20, 0, Math.PI*2); ctx.fill();
+        }
+        ex.timer--; 
+        if (ex.timer <= 0) explosions.splice(i, 1);
     });
 }
 
-// --- CONTROLES Y FINAL ---
 window.addEventListener('keydown', e => {
     keys[e.code] = true;
     if (e.code === 'Space' && gameRunning) {
         if (energy >= ENERGY_COST) {
             bullets.push({ x: player.x + player.w / 2 - 3, y: player.y, w: 6, h: 15 });
             energy -= ENERGY_COST;
+            
+            // Reproducción segura de sonido
+            if (shootSound.readyState >= 2) {
+                shootSound.currentTime = 0;
+                shootSound.play().catch(()=>{});
+            }
         }
     }
 });
@@ -190,12 +215,13 @@ function endGame(win) {
     }
 }
 
-// Las funciones saveRanking y showRanking se mantienen igual que en la versión anterior
+// Persistencia de Ranking
 function saveRanking(name, min, seg, cent) {
-    const totalCent = (min * 6000) + (seg * 100) + cent;
+    const totalCent = (parseInt(min) * 6000) + (parseInt(seg) * 100) + parseInt(cent);
     const timeStr = `${min}:${seg}:${cent}`;
     let ranking = JSON.parse(localStorage.getItem('invasionRanking')) || [];
     const existingIndex = ranking.findIndex(r => r.name === name);
+    
     if (existingIndex !== -1) {
         if (totalCent < ranking[existingIndex].totalCent) {
             ranking[existingIndex] = { name, timeStr, totalCent };
@@ -203,6 +229,7 @@ function saveRanking(name, min, seg, cent) {
     } else {
         ranking.push({ name, timeStr, totalCent });
     }
+    
     ranking.sort((a, b) => a.totalCent - b.totalCent);
     ranking = ranking.slice(0, 10);
     localStorage.setItem('invasionRanking', JSON.stringify(ranking));
@@ -218,3 +245,10 @@ function showRanking() {
     });
     document.getElementById('ranking-container').classList.remove('hidden');
 }
+
+// Prevenir scroll
+window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);

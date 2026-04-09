@@ -170,10 +170,6 @@ canvas {
 }
 
 
-
-
-
-
 /* Efecto de pasar el raton */
 /* .boton:hover {
     transform: translateY(-5px) scale(1.1);
@@ -182,11 +178,42 @@ canvas {
 } */
 
 /* lo ajustamos para el movil las columnas */
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
     .fila{
         flex-direction: column;
     }
     .izquierda,.derecha {
+        width: 100%;
+    }
+} */
+
+@media screen and (max-width: 600px) {
+    #game-container {
+        width: 100vw; /* Ocupa todo el ancho de la pantalla del móvil */
+        height: auto;
+        border: none; /* Quitamos bordes para ganar espacio */
+    }
+    canvas {
+        width: 100% !important; /* Fuerza al canvas a encogerse al ancho del móvil */
+        height: auto !important;
+    }
+    /* Ajustamos el tamaño de los botones táctiles para que no sean gigantes */
+    .touch-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 0.8rem;
+    }
+    #btn-right {
+        left: 90px; /* Pegamos más las flechas */
+    }
+    #btn-shoot {
+        width: 80px;
+        height: 80px;
+    }
+    .fila {
+        flex-direction: column;
+    }
+    .izquierda, .derecha {
         width: 100%;
     }
 }

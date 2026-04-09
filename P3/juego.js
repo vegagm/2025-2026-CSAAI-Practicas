@@ -99,10 +99,17 @@ function configurarControlesTactiles() {
     const btnRight = document.getElementById('btn-right');
     const btnShoot = document.getElementById('btn-shoot');
 
-    // Manejo de toques (touchstart y touchend)
     const setupBtn = (el, key) => {
-        el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
-        el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+        // Añadimos { passive: false } para que el navegador no ignore el toque
+        el.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            keys[key] = true; 
+        }, { passive: false });
+
+        el.addEventListener('touchend', (e) => { 
+            e.preventDefault(); 
+            keys[key] = false; 
+        }, { passive: false });
     };
 
     setupBtn(btnLeft, 'ArrowLeft');
@@ -111,7 +118,7 @@ function configurarControlesTactiles() {
     btnShoot.addEventListener('touchstart', (e) => {
         e.preventDefault();
         if (gameRunning && energy >= ENERGY_COST) disparar();
-    });
+    }, { passive: false });
 }
 
 function disparar() {

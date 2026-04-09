@@ -1,53 +1,177 @@
 body {
-    margin: 0; padding: 0; background-color: #050505; color: white;
+    margin: 0; 
+    padding: 0; 
+    background-color: #050505; 
+    color: white;
     font-family: 'Courier New', Courier, monospace;
-    display: flex; justify-content: center; align-items: center;
-    height: 100vh; overflow: hidden;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    height: 100vh; 
+    overflow: hidden;
 }
 
-#game-container { position: relative; border: 4px solid #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+#game-container {
+    position: relative;
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    
+    /* Esto asegura que el juego no se salga de pantallas pequeñas */
+    max-width: 100vw; 
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
 #ui-layer {
-    position: absolute; top: 15px; left: 20px; right: 20px;
-    display: flex; justify-content: space-between; align-items: center;
-    pointer-events: none; z-index: 10;
+    position: absolute; 
+    top: 15px; 
+    left: 20px; 
+    right: 20px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    pointer-events: none; 
+    z-index: 10;
 }
 
-#stats p { margin: 5px 0; font-size: 1.2rem; }
+#stats p { 
+    margin: 5px 0; 
+    font-size: 1.2rem; 
+}
 
-#lives-container { display: flex; align-items: center; gap: 10px; }
+#lives-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
 
-#energy-bar-container { width: 120px; height: 12px; background: rgba(255, 255, 255, 0.1); border: 2px solid #fff; margin-top: 10px; }
+#energy-bar-container { 
+    width: 120px; 
+    height: 12px; 
+    background: rgba(255, 255, 255, 0.1); 
+    border: 2px solid #fff; 
+    margin-top: 10px; 
+}
 
-#energy-bar { width: 100%; height: 100%; background: #00ffcc; transition: width 0.1s linear; }
+#energy-bar { 
+    width: 100%; 
+    height: 100%; 
+    background: #00ffcc; 
+    transition: width 0.1s linear; 
+}
 
-canvas { background-color: #000000; display: block; }
+canvas {
+    background-color: #000000;
+    display: block;
+    /* Importante: El canvas se adaptará al ancho del contenedor */
+    width: 100%;
+    height: auto; 
+    max-width: 800px; /* No queremos que se pixelé demasiado en pantallas gigantes */
+}
 
 /* Overlays */
 #login-overlay, #message-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; align-items: center; z-index: 100;
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 100;
 }
 
-.selection-box { text-align: center; border: 2px solid #00ffcc; padding: 40px; background: #000; }
+.selection-box { 
+    text-align: center; 
+    border: 2px solid #00ffcc; 
+    padding: 40px; 
+    background: #000; 
+}
 
 #username-input {
-    display: block; width: 80%; margin: 20px auto; padding: 10px;
-    background: transparent; color: #00ffcc; border: 1px solid #00ffcc;
-    font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; text-align: center;
+    display: block; 
+    width: 80%;
+    margin: 20px auto; 
+    padding: 10px;
+    background: transparent; 
+    color: #00ffcc; 
+    border: 1px solid #00ffcc;
+    font-family: 'Courier New', Courier, monospace; 
+    font-size: 1.2rem; 
+    text-align: center;
 }
 
 .boton, #restart-button {
-    padding: 15px 30px; background: transparent; color: #00ffcc;
-    border: 2px solid #00ffcc; cursor: pointer; font-family: 'Courier New', Courier, monospace;
-    font-size: 1.1rem; transition: all 0.2s;
+    padding: 15px 30px; 
+    background: transparent; 
+    color: #00ffcc;
+    border: 2px solid #00ffcc; 
+    cursor: pointer; 
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem; 
+    transition: all 0.2s;
 }
 
-.boton:hover, #restart-button:hover { background: #00ffcc; color: black; box-shadow: 0 0 15px #00ffcc; }
+.boton:hover, #restart-button:hover { 
+    background: #00ffcc; 
+    color: black; 
+    box-shadow: 0 0 15px #00ffcc; 
+}
 
 /* Ranking Table */
-#ranking-container { margin: 20px 0; font-size: 0.9rem; }
-#ranking-table { width: 100%; border-collapse: collapse; margin-top: 10px; color: #00ffcc; }
-#ranking-table th, #ranking-table td { border: 1px solid #00ffcc; padding: 8px; text-align: center; }
+#ranking-container { 
+    margin: 20px 0; 
+    font-size: 0.9rem; 
+}
+#ranking-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px; 
+    color: #00ffcc; 
+}
+#ranking-table th, #ranking-table td { 
+    border: 1px solid #00ffcc; 
+    padding: 8px; 
+    text-align: center; 
+}
 
-.hidden { display: none !important; }
+.hidden { 
+    display: none !important; 
+}
+
+@media screen and (max-width: 600px) {
+    #stats p {
+        font-size: 0.9rem; /* Texto más pequeño en móviles */
+    }
+    
+    #ui-layer {
+        top: 5px;
+        left: 10px;
+        right: 10px;
+    }
+
+    #game-container {
+        border: 2px solid #ffffff; /* Borde más fino en pantallas pequeñas */
+    }
+
+    /* Adaptación de tus clases genéricas */
+    .fila {
+        flex-direction: column;
+    }
+    .izquierda, .derecha {
+        width: 100%;
+    }
+    
+    /* Ajuste del login para pantallas pequeñas */
+    .selection-box {
+        width: 90%;
+        padding: 20px;
+    }
+    
+    #message-text {
+        font-size: 1.8rem;
+    }
+}

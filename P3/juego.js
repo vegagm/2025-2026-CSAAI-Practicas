@@ -29,7 +29,8 @@ function cargarSonido(ruta) {
 
 const shootSound = cargarSonido('disparo.m4a');
 const explosionSound = cargarSonido('explosion.m4a');
-const gameOverSound = cargarSonido('gameover.m4a'); 
+const gameOverSound = cargarSonido('gameover.m4a');
+const victoriaSound = cargarSonido('victoria.m4a'); 
 
 // --- VARIABLES DE ESTADO ---
 let score, lives, energy, gameRunning, currentUser;
@@ -204,14 +205,44 @@ function updateLivesUI() {
     }
 }
 
+// function endGame(win) {
+//     gameRunning = false;
+//     crono.stop();
+//     overlayEl.classList.remove('hidden');
+//     messageTextEl.innerText = win ? "¡VICTORIA!" : "GAME OVER";
+//     messageTextEl.style.color = win ? "#00ffcc" : "#ff4444";
+//     if (win) {
+//         saveRanking(currentUser, crono.min, crono.seg, crono.cent);
+//     }
+// }
+
 function endGame(win) {
     gameRunning = false;
     crono.stop();
     overlayEl.classList.remove('hidden');
-    messageTextEl.innerText = win ? "¡VICTORIA!" : "GAME OVER";
-    messageTextEl.style.color = win ? "#00ffcc" : "#ff4444";
+    
+    // Configuramos el mensaje y el color
     if (win) {
+        messageTextEl.innerText = "¡VICTORIA!";
+        messageTextEl.style.color = "#00ffcc";
+        
+        // REPRODUCIR SONIDO DE VICTORIA
+        if (victoriaSound.readyState >= 2) {
+            victoriaSound.currentTime = 0;
+            victoriaSound.play().catch(() => {});
+        }
+        
+        // Guardamos en el ranking
         saveRanking(currentUser, crono.min, crono.seg, crono.cent);
+    } else {
+        messageTextEl.innerText = "GAME OVER";
+        messageTextEl.style.color = "#ff4444";
+        
+        // REPRODUCIR SONIDO DE GAME OVER
+        if (gameOverSound.readyState >= 2) {
+            gameOverSound.currentTime = 0;
+            gameOverSound.play().catch(() => {});
+        }
     }
 }
 

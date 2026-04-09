@@ -29,7 +29,7 @@ function cargarSonido(ruta) {
 
 const shootSound = cargarSonido('disparo.m4a');
 const explosionSound = cargarSonido('explosion.m4a');
-const gameOverSound = cargarSonido('gameover.mp3'); // Opcional
+const gameOverSound = cargarSonido('gameover.m4a'); 
 
 // --- VARIABLES DE ESTADO ---
 let score, lives, energy, gameRunning, currentUser;

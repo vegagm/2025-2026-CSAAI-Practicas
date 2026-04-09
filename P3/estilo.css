@@ -1,79 +1,185 @@
 body {
-    background: black;
-    color: antiquewhite;
-    text-align: center;
-    font-family: Arial;
-}
-
-canvas {
-    background: #000011;
-    border: 2px solid white;
-    display: block;
-    margin: 20px auto;
-}
-
-h1 {
-    margin-top: 10px;
-}
-
-.game-container {
+    margin: 0;
+    padding: 0;
+    background-color: #050505; /* Fondo espacio profundo */
+    color: white;
+    font-family: 'Courier New', Courier, monospace; /* Fuente retro-futurista */
     display: flex;
     justify-content: center;
-    margin: 20px;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* Contenedor principal */
-.controles {
+#game-container {
+    position: relative;
+    border: 4px solid #ffffff; /* Marco del área de batalla */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+#ui-layer {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    right: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 90%;
-    margin: 20px auto;
+    pointer-events: none; /* No interfiere con el canvas */
+    z-index: 10;
 }
 
-/* Lado izquierdo (flechas) */
-.lado-izquierdo {
+#stats p {
+    margin: 5px 0;
+    font-size: 1.2rem;
+}
+
+#lives-container {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Lado derecho (disparo) */
-.lado-derecho {
-    display: flex;
+.life-icon {
+    width: 25px; /* Iconos de vidas pequeños */
+    height: auto;
 }
 
-/* BOTONES GENERALES */
-.boton {
-    padding: 15px 20px;
-    font-size: 20px;
-    background: #222;
-    color: white;
-    border: 2px solid white;
-    border-radius: 2px;
-}
-.boton:active {
-    transform: scale(0.9);
+#energy-bar-container {
+    width: 120px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #fff;
+    margin-top: 10px;
 }
 
-/* Boton disparo */
-.disparo {
-    background: rgba(253, 203, 103, 0.846);
-    font-size: 24px;
-    padding: 20px 25px;
+#energy-bar {
+    width: 100%; /* Empieza llena */
+    height: 100%;
+    background: #00ffcc; /* Color energía antimateria */
+    transition: width 0.1s linear;
 }
 
-/* menu */
-.menu-container {
+canvas {
+    background-color: #000000;
+    display: block;
+}
+
+/* Superposición para mensajes y botón */
+#message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Fondo oscuro translúcido */
     display: flex;
     justify-content: center;
-    margin-top: 30px;
+    align-items: center;
+    z-index: 100;
 }
 
-.menu {
-    background: rgb(95, 175, 249);
+#message-content {
+    text-align: center;
+}
+
+#message-text {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+#restart-button {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    background-color: transparent;
+    color: white;
+    border: 3px solid white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#restart-button:hover {
+    background-color: white;
+    color: black;
+}
+
+.hidden { display: none !important; }
+
+
+
+#selector-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: 1000; display: flex; justify-content: center; align-items: center;
+}
+.selection-box { text-align: center; border: 2px solid #00ffcc; padding: 40px; }
+.selection-box button { 
+    display: block; width: 200px; margin: 10px auto; padding: 15px; 
+    background: transparent; color: #00ffcc; border: 1px solid #00ffcc; cursor: pointer;
+}
+
+#mobile-controls {
+    position: absolute; bottom: 20px; width: 100%; height: 150px; pointer-events: none;
+}
+.touch-btn {
+    position: absolute; width: 80px; height: 80px; background: rgba(255,255,255,0.2);
+    border: 2px solid #fff; border-radius: 50%; display: flex; justify-content: center;
+    align-items: center; color: white; font-weight: bold; pointer-events: auto;
+    user-select: none; -webkit-user-select: none;
+}
+#btn-left { left: 20px; bottom: 20px; }
+#btn-right { left: 110px; bottom: 20px; }
+#btn-shoot { right: 20px; bottom: 20px; width: 100px; height: 100px; background: rgba(255, 0, 0, 0.3); }
+
+.hidden { display: none !important; }
+
+#btn-pc, #btn-mobile {
+    display: block;
+    width: 220px;
+    margin: 15px auto;
+    padding: 15px;
+
+    background: transparent;
+    color: #00ffcc;
+    border: 2px solid #00ffcc;
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+#btn-pc:hover, #btn-mobile:hover {
+    background-color: #00ffcc;
+    color: black;
+
+    transform: scale(1.08);
+    box-shadow: 0 0 10px #00ffcc, 0 0 25px #00ffcc;
 }
 
 
+#btn-pc, #btn-mobile {
+    text-shadow: 0 0 5px #00ffcc;
+}
+
+#btn-pc:hover, #btn-mobile:hover {
+    text-shadow: none;
+}
+
+
+
+
+
+
+/* Efecto de pasar el raton */
+/* .boton:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 0 15px #0aecf4, 0 0 30px #09f87d;
+    cursor: pointer;
+} */
 
 /* lo ajustamos para el movil las columnas */
 @media screen and (max-width: 600px) {

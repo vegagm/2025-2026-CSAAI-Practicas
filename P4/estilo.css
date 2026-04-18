@@ -1,7 +1,7 @@
 :root {
-    --bg-color: #e2f1cc;
-    --primary: #2d5a27;
-    --highlight: #ff4d4d;
+    --bg-color: #f09f4f;
+    --primary: #274f5a;
+    --highlight: #ee3535;
     --card-bg: #f8fdf2;
 }
 
@@ -33,7 +33,7 @@ body {
 .game-area { flex: 2; min-width: 300px; }
 
 .panel {
-    background: white;
+    background: rgb(255, 134, 21);
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -101,6 +101,17 @@ body {
 
 .btn.primary { background: #000; color: white; }
 .btn.secondary { background: #eee; }
+
+/* Clase para ocultar elementos */
+.hidden {
+    display: none !important;
+}
+
+/* Opcional: para que el botón de reanudar sea verde y destaque */
+#btn-resume {
+    background-color: #28a745;
+    color: white;
+}
 
 @media (max-width: 600px) {
     .grid-8 { grid-template-columns: repeat(2, 1fr); }

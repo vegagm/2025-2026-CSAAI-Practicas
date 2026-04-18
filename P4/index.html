@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beat The Word</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
     <div class="game-container">
@@ -36,7 +36,8 @@
 
                 <div class="panel controls">
                     <button id="btn-start" class="btn primary">Empezar partida</button>
-                    <button id="btn-stop" class="btn secondary">Detener</button>
+                    <button id="btn-stop" class="btn secondary">Detener / Pausa</button>
+                    <button id="btn-resume" class="btn primary" style="display:none;">Reanudar</button>
                     <button id="btn-audio" class="btn outline">Música: OFF</button>
                 </div>
             </section>
@@ -63,6 +64,7 @@
             </section>
         </main>
     </div>
+    <script src="crono.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

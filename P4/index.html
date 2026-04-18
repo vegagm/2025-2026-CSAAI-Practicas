@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beat The Word</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Beat The Word</h1>
+            <p>Sigue la secuencia al ritmo del Beat</p>
+        </header>
+
+        <main class="main-layout">
+            <section class="sidebar">
+                <div class="panel config-panel">
+                    <h3>Configuración</h3>
+                    <label for="secuencia">Secuencia</label>
+                    <select id="secuencia">
+                        <option value="cama-casa">Cama / Casa</option>
+                        <option value="pato-gato">Pato / Gato</option>
+                        <option value="luna-cuna">Luna / Cuna</option>
+                    </select>
+
+                    <label for="nivel-inicial">Nivel inicial</label>
+                    <select id="nivel-inicial">
+                        <option value="0">Nivel 1</option>
+                        <option value="1">Nivel 2</option>
+                        <option value="2">Nivel 3</option>
+                        <option value="3">Nivel 4</option>
+                        <option value="4">Nivel 5</option>
+                    </select>
+                </div>
+
+                <div class="panel controls">
+                    <button id="btn-start" class="btn primary">Empezar partida</button>
+                    <button id="btn-stop" class="btn secondary">Detener</button>
+                    <button id="btn-audio" class="btn outline">Música: OFF</button>
+                </div>
+            </section>
+
+            <section class="game-area">
+                <div class="status-bar">
+                    <div class="stat">Nivel: <span id="display-nivel">-/5</span></div>
+                    <div class="stat">Tiempo: <span id="display-tiempo">0.0s</span></div>
+                    <div class="stat">Estado: <span id="display-estado">En espera</span></div>
+                </div>
+
+                <div id="word-display" class="word-display">Pulsa "Empezar"</div>
+
+                <div id="grid" class="grid-8">
+                    <div class="cell" data-index="0"></div>
+                    <div class="cell" data-index="1"></div>
+                    <div class="cell" data-index="2"></div>
+                    <div class="cell" data-index="3"></div>
+                    <div class="cell" data-index="4"></div>
+                    <div class="cell" data-index="5"></div>
+                    <div class="cell" data-index="6"></div>
+                    <div class="cell" data-index="7"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

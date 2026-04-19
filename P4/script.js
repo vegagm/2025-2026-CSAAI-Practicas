@@ -20,7 +20,7 @@ let patronActual = [];
 
 // El cronómetro se inicializa después de que el DOM esté listo o al final del archivo
 let miCronometro; 
-let musica = new Audio("musica_fondo.mp3");
+let musica = new Audio("musicaintro.mp3");
 musica.loop = true;
 
 // ================= DOM =================
@@ -171,7 +171,7 @@ function finalizarJuego(msg) {
 function bloquearControles(bloquear) {
     document.getElementById("secuencia").disabled = bloquear;
     document.getElementById("nivel-inicial").disabled = bloquear;
-    btnStart.disabled = bloquear; // Se bloquea al empezar, pero se desbloquea al pausar/parar
+    btnStart.disabled = bloquear; 
 }
 
 // ================= EVENTOS =================

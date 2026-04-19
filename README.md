@@ -9,6 +9,6 @@ Práctica 2 (Juego BOOM):https://vegagm.github.io/2025-2026-CSAAI-Practicas/P2/
 
 Práctica 3 (Juego Invasión Alienígena): https://vegagm.github.io/2025-2026-CSAAI-Practicas/P3/
 
-Práctica 4 ():
+Práctica 4 (Juego de Beat the Word): https://vegagm.github.io/2025-2026-CSAAI-Practicas/P4/
 
 Práctica 5 ():

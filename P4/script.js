@@ -1,10 +1,6 @@
 // ================= CONFIG =================
 const NIVELES = [
-    { vel: 1200 }, // Nivel 1
-    { vel: 900  }, // Nivel 2
-    { vel: 700  }, // Nivel 3
-    { vel: 500  }, // Nivel 4
-    { vel: 350  }  // Nivel 5
+    { vel: 1200 }, { vel: 900 }, { vel: 700 }, { vel: 500 }, { vel: 350 }
 ];
 
 const PALABRAS = {
@@ -17,12 +13,13 @@ const PALABRAS = {
 let nivelActual = 0;
 let posActual = 0;
 let jugando = false;
-let pausado = false; // Nueva variable de estado
+let pausado = false;
 let timerBeat = null;
 let musicaActiva = false;
-let patronActual = []; // Aquí guardaremos el patrón aleatorio de la ronda
+let patronActual = [];
 
-const miCronometro = new Cronometro(document.getElementById("display-tiempo"));
+// El cronómetro se inicializa después de que el DOM esté listo o al final del archivo
+let miCronometro; 
 let musica = new Audio("musica_fondo.mp3");
 musica.loop = true;
 
@@ -34,9 +31,11 @@ const btnPause = document.getElementById("btn-pause");
 const btnResume = document.getElementById("btn-resume");
 const btnAudio = document.getElementById("btn-audio");
 
+// Inicializamos el cronómetro aquí
+miCronometro = new Cronometro(document.getElementById("display-tiempo"));
+
 // ================= FUNCIONES =================
 
-// Genera un array de 8 números (0 o 1) al azar
 function generarPatronAleatorio() {
     let nuevoPatron = [];
     for (let i = 0; i < 8; i++) {
@@ -46,16 +45,29 @@ function generarPatronAleatorio() {
 }
 
 function iniciarJuego() {
-    if (jugando) return;
+    // Si ya había una partida (aunque estuviera pausada), limpiamos todo
+    clearInterval(timerBeat);
+    if (miCronometro) miCronometro.stop();
+    
     jugando = true;
     pausado = false;
+    
+    // Leemos los valores actuales (por si el usuario los cambió durante la pausa)
     nivelActual = parseInt(document.getElementById("nivel-inicial").value);
+
+    // Reset visual de los botones: mostramos Pausa y ocultamos Reanudar
+    btnPause.classList.remove("hidden");
+    btnResume.classList.add("hidden");
 
     bloquearControles(true);
     miCronometro.reset();
     miCronometro.start();
 
-    if (musicaActiva) musica.play();
+    if (musicaActiva) {
+        musica.currentTime = 0; // Reiniciamos la música desde el principio
+        musica.play().catch(e => console.log("Error audio:", e));
+    }
+    
     prepararRonda();
 }
 
@@ -66,9 +78,8 @@ function prepararRonda() {
         return;
     }
 
-    // Generamos el patrón aleatorio para ESTA ronda específica
     patronActual = generarPatronAleatorio();
-    posActual = 0; // Reiniciamos posición para la nueva ronda
+    posActual = 0; 
 
     dibujarTableroEstatico();
     document.getElementById("display-estado").innerText = "Preparando...";
@@ -111,10 +122,6 @@ function iniciarRonda() {
     }, config.vel);
 }
 
-const btnPause = document.getElementById("btn-pause");
-const btnResume = document.getElementById("btn-resume");
-
-// FUNCIÓN PARA PAUSAR (Antiguo Detener)
 function pausarJuego() {
     if (!jugando || pausado) return;
 
@@ -125,20 +132,22 @@ function pausarJuego() {
 
     document.getElementById("display-estado").innerText = "Pausado";
     
-    // CAMBIO AQUÍ: Intercambiamos botones
     btnPause.classList.add("hidden");
     btnResume.classList.remove("hidden");
+
+    // AHORA: Permitimos cambiar ajustes y reiniciar mientras está en pausa
+    bloquearControles(false); 
 }
 
-// FUNCIÓN PARA REANUDAR
 function reanudarJuego() {
     if (!pausado) return;
 
     pausado = false;
+    bloquearControles(true); // Volvemos a bloquear mientras se juega
+
     miCronometro.start();
     if (musicaActiva) musica.play();
 
-    // CAMBIO AQUÍ: Intercambiamos botones de vuelta
     btnPause.classList.remove("hidden");
     btnResume.classList.add("hidden");
     
@@ -154,22 +163,18 @@ function finalizarJuego(msg) {
     
     wordDisplay.innerText = msg;
     document.getElementById("display-estado").innerText = "Finalizado";
-    
-    // Al terminar, nos aseguramos de que el botón de Detener sea el visible para la siguiente vez
     btnPause.classList.remove("hidden");
     btnResume.classList.add("hidden");
-    
     bloquearControles(false);
 }
 
 function bloquearControles(bloquear) {
     document.getElementById("secuencia").disabled = bloquear;
     document.getElementById("nivel-inicial").disabled = bloquear;
-    btnStart.disabled = bloquear;
+    btnStart.disabled = bloquear; // Se bloquea al empezar, pero se desbloquea al pausar/parar
 }
 
 // ================= EVENTOS =================
-
 btnStart.addEventListener("click", iniciarJuego);
 btnPause.addEventListener("click", pausarJuego);
 btnResume.addEventListener("click", reanudarJuego);
@@ -177,6 +182,9 @@ btnResume.addEventListener("click", reanudarJuego);
 btnAudio.addEventListener("click", () => {
     musicaActiva = !musicaActiva;
     btnAudio.innerText = musicaActiva ? "Música: ON" : "Música: OFF";
-    if (musicaActiva && jugando && !pausado) musica.play();
-    else musica.pause();
+    if (musicaActiva && jugando && !pausado) {
+        musica.play().catch(e => console.log("Error audio:", e));
+    } else {
+        musica.pause();
+    }
 });

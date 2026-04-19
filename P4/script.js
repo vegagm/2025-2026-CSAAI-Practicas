@@ -84,20 +84,16 @@ function prepararRonda() {
     posActual = 0; 
 
     dibujarTableroEstatico();
+    
+    // Mostramos información visual
     document.getElementById("display-estado").innerText = "Preparando...";
     wordDisplay.innerText = `Nivel ${nivelActual + 1}`;
 
-    // CORRECCIÓN 1: Reducimos el tiempo de preparación a 0.5 segundos para todos
-    setTimeout(iniciarRonda, 500);
-}
-
-function dibujarTableroEstatico() {
-    const palabras = PALABRAS[document.getElementById("secuencia").value];
-    cells.forEach((cell, index) => {
-        cell.classList.remove("active");
-        let tipo = patronActual[index];
-        cell.innerText = palabras[tipo];
-    });
+    // CAMBIO CLAVE: 
+    // Para el nivel 1, esperamos a que el cronómetro llegue a 2 segundos (2000ms).
+    // Para los siguientes niveles, mantenemos la misma pausa de 2 segundos 
+    // entre que termina uno y empieza el siguiente para que sea rítmico.
+    setTimeout(iniciarRonda, 2000); 
 }
 
 function iniciarRonda() {
@@ -109,8 +105,8 @@ function iniciarRonda() {
     const config = NIVELES[nivelActual];
     const palabras = PALABRAS[document.getElementById("secuencia").value];
 
-    // Definimos la acción de resaltar
     const realizarSalto = () => {
+        // Limpiamos resaltado anterior
         cells.forEach(c => c.classList.remove("active"));
 
         if (posActual < 8) {
@@ -119,16 +115,18 @@ function iniciarRonda() {
             wordDisplay.innerText = palabras[tipo];
             posActual++;
         } else {
+            // Cuando termina la secuencia de 8, paramos este intervalo
             clearInterval(timerBeat);
             nivelActual++;
+            // Llamamos a la preparación del siguiente nivel
             prepararRonda();
         }
     };
 
-    // CORRECCIÓN 2: Ejecutamos el primer paso INMEDIATAMENTE
+    // Encendido instantáneo de la primera casilla al terminar la preparación
     realizarSalto();
 
-    // Programamos el resto de los pasos
+    // Iniciamos el ciclo para las 7 casillas restantes
     timerBeat = setInterval(realizarSalto, config.vel);
 }
 

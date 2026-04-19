@@ -1,6 +1,10 @@
 // ================= CONFIG =================
 const NIVELES = [
-    { vel: 1200 }, { vel: 900 }, { vel: 700 }, { vel: 500 }, { vel: 350 }
+    { vel: 550 }, // Nivel 1: Ritmo inicial lento
+    { vel: 480 }, // Nivel 2: Un poco más rápido
+    { vel: 410 }, // Nivel 3: Ritmo medio
+    { vel: 340 }, // Nivel 4: Ritmo rápido
+    { vel: 280 }  // Nivel 5: Ritmo máximo (Final del audio)
 ];
 
 const PALABRAS = {

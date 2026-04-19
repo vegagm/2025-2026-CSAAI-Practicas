@@ -23,7 +23,8 @@ let musicaActiva = false;
 let patronActual = [];
 
 let miCronometro; 
-let musica = new Audio("musicaintro.mp3");
+// let musica = new Audio("musicaintro.mp3");
+let musica = new Audio("musicafondo2.m4a");
 musica.loop = true;
 
 // ================= DOM =================

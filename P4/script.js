@@ -1,10 +1,10 @@
 // ================= CONFIG =================
 const NIVELES = [
-    { vel: 550 }, // Nivel 1: Ritmo inicial lento
-    { vel: 480 }, // Nivel 2: Un poco más rápido
-    { vel: 410 }, // Nivel 3: Ritmo medio
-    { vel: 340 }, // Nivel 4: Ritmo rápido
-    { vel: 280 }  // Nivel 5: Ritmo máximo (Final del audio)
+    { vel: 550 }, // Nivel 1
+    { vel: 480 }, // Nivel 2
+    { vel: 410 }, // Nivel 3
+    { vel: 340 }, // Nivel 4
+    { vel: 280 }  // Nivel 5
 ];
 
 const PALABRAS = {
@@ -17,12 +17,11 @@ const PALABRAS = {
 let nivelActual = 0;
 let posActual = 0;
 let jugando = false;
-let pausado = false;
+let pausado = false; 
 let timerBeat = null;
 let musicaActiva = false;
 let patronActual = [];
 
-// El cronómetro se inicializa después de que el DOM esté listo o al final del archivo
 let miCronometro; 
 let musica = new Audio("musicaintro.mp3");
 musica.loop = true;
@@ -35,7 +34,7 @@ const btnPause = document.getElementById("btn-pause");
 const btnResume = document.getElementById("btn-resume");
 const btnAudio = document.getElementById("btn-audio");
 
-// Inicializamos el cronómetro aquí
+// Inicializamos el cronómetro con el elemento del HTML
 miCronometro = new Cronometro(document.getElementById("display-tiempo"));
 
 // ================= FUNCIONES =================
@@ -49,17 +48,16 @@ function generarPatronAleatorio() {
 }
 
 function iniciarJuego() {
-    // Si ya había una partida (aunque estuviera pausada), limpiamos todo
+    // Limpieza de seguridad
     clearInterval(timerBeat);
     if (miCronometro) miCronometro.stop();
     
     jugando = true;
     pausado = false;
     
-    // Leemos los valores actuales (por si el usuario los cambió durante la pausa)
     nivelActual = parseInt(document.getElementById("nivel-inicial").value);
 
-    // Reset visual de los botones: mostramos Pausa y ocultamos Reanudar
+    // Reset visual de botones
     btnPause.classList.remove("hidden");
     btnResume.classList.add("hidden");
 
@@ -68,8 +66,8 @@ function iniciarJuego() {
     miCronometro.start();
 
     if (musicaActiva) {
-        musica.currentTime = 0; // Reiniciamos la música desde el principio
-        musica.play().catch(e => console.log("Error audio:", e));
+        musica.currentTime = 0; 
+        musica.play().catch(e => console.log("Audio bloqueado o no encontrado"));
     }
     
     prepararRonda();
@@ -89,7 +87,8 @@ function prepararRonda() {
     document.getElementById("display-estado").innerText = "Preparando...";
     wordDisplay.innerText = `Nivel ${nivelActual + 1}`;
 
-    setTimeout(iniciarRonda, 1500);
+    // CORRECCIÓN 1: Reducimos el tiempo de preparación a 0.5 segundos para todos
+    setTimeout(iniciarRonda, 500);
 }
 
 function dibujarTableroEstatico() {
@@ -110,7 +109,8 @@ function iniciarRonda() {
     const config = NIVELES[nivelActual];
     const palabras = PALABRAS[document.getElementById("secuencia").value];
 
-    timerBeat = setInterval(() => {
+    // Definimos la acción de resaltar
+    const realizarSalto = () => {
         cells.forEach(c => c.classList.remove("active"));
 
         if (posActual < 8) {
@@ -123,7 +123,13 @@ function iniciarRonda() {
             nivelActual++;
             prepararRonda();
         }
-    }, config.vel);
+    };
+
+    // CORRECCIÓN 2: Ejecutamos el primer paso INMEDIATAMENTE
+    realizarSalto();
+
+    // Programamos el resto de los pasos
+    timerBeat = setInterval(realizarSalto, config.vel);
 }
 
 function pausarJuego() {
@@ -138,8 +144,6 @@ function pausarJuego() {
     
     btnPause.classList.add("hidden");
     btnResume.classList.remove("hidden");
-
-    // AHORA: Permitimos cambiar ajustes y reiniciar mientras está en pausa
     bloquearControles(false); 
 }
 
@@ -147,7 +151,7 @@ function reanudarJuego() {
     if (!pausado) return;
 
     pausado = false;
-    bloquearControles(true); // Volvemos a bloquear mientras se juega
+    bloquearControles(true); 
 
     miCronometro.start();
     if (musicaActiva) musica.play();
@@ -187,7 +191,7 @@ btnAudio.addEventListener("click", () => {
     musicaActiva = !musicaActiva;
     btnAudio.innerText = musicaActiva ? "Música: ON" : "Música: OFF";
     if (musicaActiva && jugando && !pausado) {
-        musica.play().catch(e => console.log("Error audio:", e));
+        musica.play().catch(e => console.log("Error al reproducir"));
     } else {
         musica.pause();
     }

@@ -36,7 +36,8 @@ let musicaActiva = false;
 let patronActual = [];
 
 // Audio de fondo genérico
-let musica = new Audio("musicafondo2.m4a");
+// let musica = new Audio("musicafondo2.m4a");
+let musica = new Audio("cancion2.mp3");
 musica.loop = true;
 
 const cells = document.querySelectorAll(".cell");

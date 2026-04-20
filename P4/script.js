@@ -1,4 +1,4 @@
-// ================= CONFIG =================
+// ================= CONFIGURACIÓN =================
 // Tiempos ajustados rítmicamente al audio musicafondo2.m4a
 const NIVELES = [
     { vel: 550 }, // Nivel 1
@@ -14,7 +14,7 @@ const PALABRAS = {
     "luna-cuna": ["LUNA", "CUNA"]
 };
 
-// ================= ESTADO =================
+// ================= ESTADO DEL JUEGO =================
 let nivelActual = 0;
 let posActual = 0;
 let jugando = false;
@@ -23,23 +23,28 @@ let timerBeat = null;
 let musicaActiva = false;
 let patronActual = [];
 
-let miCronometro; 
-// let musica = new Audio("musicaintro.mp3");
+// Elementos de Audio y Cronómetro
 let musica = new Audio("musicafondo2.m4a");
 musica.loop = true;
 
-// ================= DOM =================
+// Referencias al DOM
 const cells = document.querySelectorAll(".cell");
 const wordDisplay = document.getElementById("word-display");
 const btnStart = document.getElementById("btn-start");
 const btnPause = document.getElementById("btn-pause");
 const btnResume = document.getElementById("btn-resume");
 const btnAudio = document.getElementById("btn-audio");
+const displayNivel = document.getElementById("display-nivel");
+const displayEstado = document.getElementById("display-estado");
+const selectNivelInicial = document.getElementById("nivel-inicial");
+const selectSecuencia = document.getElementById("secuencia");
 
-miCronometro = new Cronometro(document.getElementById("display-tiempo"));
+// Inicialización del cronómetro (Clase externa en crono.js)
+const miCronometro = new Cronometro(document.getElementById("display-tiempo"));
 
-// ================= FUNCIONES =================
+// ================= FUNCIONES LÓGICAS =================
 
+// Genera un patrón de 8 posiciones con 0 o 1 aleatoriamente
 function generarPatronAleatorio() {
     let nuevoPatron = [];
     for (let i = 0; i < 8; i++) {
@@ -48,14 +53,26 @@ function generarPatronAleatorio() {
     return nuevoPatron;
 }
 
+// Dibuja las palabras en las celdas sin resaltarlas
+function dibujarTableroEstatico() {
+    const palabras = PALABRAS[selectSecuencia.value];
+    cells.forEach((cell, index) => {
+        cell.classList.remove("active"); // Limpiar resaltados previos
+        let tipo = patronActual[index];
+        cell.innerText = palabras[tipo];
+    });
+}
+
 function iniciarJuego() {
+    // Limpieza total antes de empezar
     clearInterval(timerBeat);
     if (miCronometro) miCronometro.stop();
     
     jugando = true;
     pausado = false;
-    nivelActual = parseInt(document.getElementById("nivel-inicial").value);
+    nivelActual = parseInt(selectNivelInicial.value);
 
+    // Interfaz de botones
     btnPause.classList.remove("hidden");
     btnResume.classList.add("hidden");
 
@@ -65,7 +82,7 @@ function iniciarJuego() {
 
     if (musicaActiva) {
         musica.currentTime = 0; 
-        musica.play().catch(e => console.log("Audio bloqueado"));
+        musica.play().catch(e => console.warn("Audio en espera de interacción"));
     }
     
     prepararRonda();
@@ -73,6 +90,7 @@ function iniciarJuego() {
 
 function prepararRonda() {
     if (!jugando) return;
+    
     if (nivelActual > 4) {
         finalizarJuego("🎉 ¡Juego completado!");
         return;
@@ -82,50 +100,47 @@ function prepararRonda() {
     posActual = 0; 
     dibujarTableroEstatico();
     
-    document.getElementById("display-estado").innerText = "Preparando...";
+    displayEstado.innerText = "Preparando...";
     wordDisplay.innerText = `Nivel ${nivelActual + 1}`;
 
-    // --- LÓGICA DE TIEMPOS SOLICITADA ---
-    // Si es el Nivel 1 (o el nivel elegido al inicio), esperamos 2 segundos.
-    // Para los siguientes niveles (entremedias), solo 0.6 segundos.
-    let tiempoEspera = (posActual === 0 && (nivelActual === parseInt(document.getElementById("nivel-inicial").value))) ? 2000 : 600;
+    // Lógica de tiempos: 2s al inicio (Nivel 1), 0.6s en las pausas intermedias
+    let esInicio = (nivelActual === parseInt(selectNivelInicial.value));
+    let tiempoEspera = esInicio ? 2000 : 600;
 
     setTimeout(iniciarRonda, tiempoEspera);
-}
-
-function dibujarTableroEstatico() {
-    const palabras = PALABRAS[document.getElementById("secuencia").value];
-    cells.forEach((cell, index) => {
-        cell.classList.remove("active");
-        let tipo = patronActual[index];
-        cell.innerText = palabras[tipo];
-    });
 }
 
 function iniciarRonda() {
     if (!jugando || pausado) return;
 
-    document.getElementById("display-estado").innerText = "Jugando";
-    document.getElementById("display-nivel").innerText = `${nivelActual + 1}/5`;
+    displayEstado.innerText = "Jugando";
+    displayNivel.innerText = `${nivelActual + 1}/5`;
 
     const config = NIVELES[nivelActual];
-    const palabras = PALABRAS[document.getElementById("secuencia").value];
+    const palabras = PALABRAS[selectSecuencia.value];
 
     const realizarSalto = () => {
+        // 1. Quitar el recuadro rojo de todas las celdas
         cells.forEach(c => c.classList.remove("active"));
 
         if (posActual < 8) {
+            // 2. Iluminar la celda actual
             cells[posActual].classList.add("active");
+            
+            // 3. Actualizar el texto grande central
             let tipo = patronActual[posActual];
             wordDisplay.innerText = palabras[tipo];
+
             posActual++;
         } else {
+            // Fin de la tanda de 8
             clearInterval(timerBeat);
             nivelActual++;
             prepararRonda();
         }
     };
 
+    // Ejecución inmediata del primer beat tras la espera
     realizarSalto();
     timerBeat = setInterval(realizarSalto, config.vel);
 }
@@ -138,8 +153,7 @@ function pausarJuego() {
     miCronometro.stop();
     musica.pause();
 
-    document.getElementById("display-estado").innerText = "Pausado";
-    
+    displayEstado.innerText = "Pausado";
     btnPause.classList.add("hidden");
     btnResume.classList.remove("hidden");
     bloquearControles(false); 
@@ -168,15 +182,15 @@ function finalizarJuego(msg) {
     musica.pause();
     
     wordDisplay.innerText = msg;
-    document.getElementById("display-estado").innerText = "Finalizado";
+    displayEstado.innerText = "Finalizado";
     btnPause.classList.remove("hidden");
     btnResume.classList.add("hidden");
     bloquearControles(false);
 }
 
 function bloquearControles(bloquear) {
-    document.getElementById("secuencia").disabled = bloquear;
-    document.getElementById("nivel-inicial").disabled = bloquear;
+    selectSecuencia.disabled = bloquear;
+    selectNivelInicial.disabled = bloquear;
     btnStart.disabled = bloquear; 
 }
 
@@ -189,7 +203,7 @@ btnAudio.addEventListener("click", () => {
     musicaActiva = !musicaActiva;
     btnAudio.innerText = musicaActiva ? "Música: ON" : "Música: OFF";
     if (musicaActiva && jugando && !pausado) {
-        musica.play().catch(e => console.log("Error al reproducir"));
+        musica.play().catch(e => console.error("Error al reproducir audio"));
     } else {
         musica.pause();
     }

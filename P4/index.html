@@ -10,7 +10,6 @@
     <div class="game-container">
         <header>
             <h1>Beat The Word</h1>
-            <!-- <p class="subtitle">Sigue la secuencia al ritmo del Beat</p> -->
             <div class="game-description">
                 El juego recorre las 8 posiciones en orden (1 a 8), iluminando una imagen cada vez. 
                 Tu objetivo es asociar la imagen resaltada con su palabra. A medida que 
@@ -21,6 +20,8 @@
 
         <main class="main-layout">
             <section class="sidebar">
+                <h2 class="hidden">Controles y Configuración</h2> 
+                
                 <div class="panel config-panel">
                     <h3>Configuración</h3>
                     <label for="secuencia">Secuencia</label>
@@ -54,6 +55,8 @@
             </section>
 
             <section class="game-area">
+                <h2 class="hidden">Tablero de Juego</h2>
+
                 <div class="status-bar">
                     <div class="stat">Nivel: <span id="display-nivel">-/5</span></div>
                     <div class="stat">Tiempo: <span id="display-tiempo">0.0s</span></div>

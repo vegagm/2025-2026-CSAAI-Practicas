@@ -1,4 +1,5 @@
 // ================= CONFIG =================
+// Tiempos ajustados rítmicamente al audio musicafondo2.m4a
 const NIVELES = [
     { vel: 550 }, // Nivel 1
     { vel: 480 }, // Nivel 2
@@ -17,7 +18,7 @@ const PALABRAS = {
 let nivelActual = 0;
 let posActual = 0;
 let jugando = false;
-let pausado = false; 
+let pausado = false;
 let timerBeat = null;
 let musicaActiva = false;
 let patronActual = [];
@@ -35,7 +36,6 @@ const btnPause = document.getElementById("btn-pause");
 const btnResume = document.getElementById("btn-resume");
 const btnAudio = document.getElementById("btn-audio");
 
-// Inicializamos el cronómetro con el elemento del HTML
 miCronometro = new Cronometro(document.getElementById("display-tiempo"));
 
 // ================= FUNCIONES =================
@@ -49,16 +49,13 @@ function generarPatronAleatorio() {
 }
 
 function iniciarJuego() {
-    // Limpieza de seguridad
     clearInterval(timerBeat);
     if (miCronometro) miCronometro.stop();
     
     jugando = true;
     pausado = false;
-    
     nivelActual = parseInt(document.getElementById("nivel-inicial").value);
 
-    // Reset visual de botones
     btnPause.classList.remove("hidden");
     btnResume.classList.add("hidden");
 
@@ -68,7 +65,7 @@ function iniciarJuego() {
 
     if (musicaActiva) {
         musica.currentTime = 0; 
-        musica.play().catch(e => console.log("Audio bloqueado o no encontrado"));
+        musica.play().catch(e => console.log("Audio bloqueado"));
     }
     
     prepararRonda();
@@ -83,18 +80,26 @@ function prepararRonda() {
 
     patronActual = generarPatronAleatorio();
     posActual = 0; 
-
     dibujarTableroEstatico();
     
-    // Mostramos información visual
     document.getElementById("display-estado").innerText = "Preparando...";
     wordDisplay.innerText = `Nivel ${nivelActual + 1}`;
 
-    // CAMBIO CLAVE: 
-    // Para el nivel 1, esperamos a que el cronómetro llegue a 2 segundos (2000ms).
-    // Para los siguientes niveles, mantenemos la misma pausa de 2 segundos 
-    // entre que termina uno y empieza el siguiente para que sea rítmico.
-    setTimeout(iniciarRonda, 2000); 
+    // --- LÓGICA DE TIEMPOS SOLICITADA ---
+    // Si es el Nivel 1 (o el nivel elegido al inicio), esperamos 2 segundos.
+    // Para los siguientes niveles (entremedias), solo 0.6 segundos.
+    let tiempoEspera = (posActual === 0 && (nivelActual === parseInt(document.getElementById("nivel-inicial").value))) ? 2000 : 600;
+
+    setTimeout(iniciarRonda, tiempoEspera);
+}
+
+function dibujarTableroEstatico() {
+    const palabras = PALABRAS[document.getElementById("secuencia").value];
+    cells.forEach((cell, index) => {
+        cell.classList.remove("active");
+        let tipo = patronActual[index];
+        cell.innerText = palabras[tipo];
+    });
 }
 
 function iniciarRonda() {
@@ -107,7 +112,6 @@ function iniciarRonda() {
     const palabras = PALABRAS[document.getElementById("secuencia").value];
 
     const realizarSalto = () => {
-        // Limpiamos resaltado anterior
         cells.forEach(c => c.classList.remove("active"));
 
         if (posActual < 8) {
@@ -116,18 +120,13 @@ function iniciarRonda() {
             wordDisplay.innerText = palabras[tipo];
             posActual++;
         } else {
-            // Cuando termina la secuencia de 8, paramos este intervalo
             clearInterval(timerBeat);
             nivelActual++;
-            // Llamamos a la preparación del siguiente nivel
             prepararRonda();
         }
     };
 
-    // Encendido instantáneo de la primera casilla al terminar la preparación
     realizarSalto();
-
-    // Iniciamos el ciclo para las 7 casillas restantes
     timerBeat = setInterval(realizarSalto, config.vel);
 }
 

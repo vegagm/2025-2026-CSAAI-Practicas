@@ -99,12 +99,19 @@ header {
     margin-bottom: -5px;
 }
 
+.cell-text {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin-top: 5px;
+}
+
 .cell.active {
-    border-color: var(--highlight) !important;
-    box-shadow: 0 0 20px var(--highlight);
-    transform: scale(1.08);
-    background: white; /* Resalta más */
-    z-index: 1;
+    border-color: #ee3535 !important; /* Rojo intenso */
+    box-shadow: 0 0 20px rgba(238, 53, 53, 0.6);
+    transform: scale(1.1);
+    background-color: #fff1f1;
+    z-index: 10;
 }
 
 .word-display {

@@ -1,16 +1,11 @@
 // ================= CONFIGURACIÓN =================
 const NIVELES = [
-    { vel: 550 }, { vel: 480 }, { vel: 410 }, { vel: 340 }, { vel: 280 }
+    { vel: 600 }, // Nivel 1
+    { vel: 500 }, // Nivel 2
+    { vel: 400 }, // Nivel 3
+    { vel: 300 }, // Nivel 4
+    { vel: 200 }  // Nivel 5
 ];
-
-//COn patrones
-// const NIVELES = [
-//     { vel: 550, pattern: [0,0,0,0, 1,1,1,1] }, 
-//     { vel: 480, pattern: [0,1,0,1, 0,1,0,1] }, 
-//     { vel: 410, pattern: [1,0,1,1, 0,0,1,0] }, 
-//     { vel: 340, pattern: [1,1,1,1, 0,0,0,0] }, 
-//     { vel: 280, pattern: [0,0,1,0, 1,1,0,1] }
-// ];
 
 const PALABRAS = {
     "cama-casa": [
@@ -40,6 +35,7 @@ let timerBeat = null;
 let musicaActiva = false;
 let patronActual = [];
 
+// Audio de fondo genérico
 let musica = new Audio("musicafondo2.m4a");
 musica.loop = true;
 
@@ -56,36 +52,33 @@ const miCronometro = new Cronometro(document.getElementById("display-tiempo"));
 
 // ================= FUNCIONES =================
 
-function generarPatronAleatorio() {
-    let nuevoPatron = [];
-    for (let i = 0; i < 8; i++) {
-        nuevoPatron.push(Math.round(Math.random())); 
+function generarPatronEquilibrado() {
+    let lista = [0, 0, 0, 0, 1, 1, 1, 1];
+    for (let i = lista.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [lista[i], lista[j]] = [lista[j], lista[i]];
     }
-    return nuevoPatron;
+    return lista;
 }
 
 function dibujarTableroEstatico() {
-    const parejaSeleccionada = PALABRAS[document.getElementById("secuencia").value];
+    const seleccion = document.getElementById("secuencia").value;
+    const parejaSeleccionada = PALABRAS[seleccion];
     
     cells.forEach((cell, index) => {
         cell.classList.remove("active");
-        
-        // Obtenemos el tipo (0 o 1) del patrón predefinido del nivel
         let tipo = patronActual[index];
-        const infoPalabra = parejaSeleccionada[tipo];
+        const info = parejaSeleccionada[tipo];
 
-        // Creamos la estructura HTML interna (icono + texto)
         cell.innerHTML = `
-            <div class="cell-icon">${infoPalabra.icono}</div>
-            <div class="cell-text">${infoPalabra.texto}</div>
+            <div class="cell-icon">${info.icono}</div>
+            <div class="cell-text">${info.texto}</div>
         `;
     });
 }
 
 function iniciarJuego() {
     clearInterval(timerBeat);
-    if (miCronometro) miCronometro.stop();
-    
     jugando = true;
     pausado = false;
     nivelActual = parseInt(document.getElementById("nivel-inicial").value);
@@ -113,39 +106,46 @@ function prepararRonda() {
         return;
     }
 
-    patronActual = generarPatronAleatorio();
+    patronActual = generarPatronEquilibrado();
     posActual = 0; 
     dibujarTableroEstatico(); 
     
-    displayEstado.innerText = "¡Lee las tarjetas!";
+    displayEstado.innerText = "¡Prepárate!";
     wordDisplay.innerText = `Nivel ${nivelActual + 1}`;
 
-    let esInicio = (nivelActual === parseInt(document.getElementById("nivel-inicial").value));
-    let tiempoHastaSilbido = esInicio ? 2100 : 800;
-
-    setTimeout(iniciarRonda, tiempoHastaSilbido);
+    setTimeout(iniciarRonda, 1000);
 }
 
 function iniciarRonda() {
     if (!jugando || pausado) return;
 
-    displayEstado.innerText = "¡Sigue el silbido!";
+    displayEstado.innerText = "¡Sigue el ritmo!";
     displayNivel.innerText = `${nivelActual + 1}/5`;
 
+    wordDisplay.innerHTML = "&nbsp;";
+
     const config = NIVELES[nivelActual];
-    const palabras = PALABRAS[document.getElementById("secuencia").value];
+    // const seleccion = document.getElementById("secuencia").value;
+    // const parejaSeleccionada = PALABRAS[seleccion];
 
     const realizarSalto = () => {
+        // Quitar resaltado de todas las celdas
         cells.forEach(c => c.classList.remove("active"));
 
         if (posActual < 8) {
             cells[posActual].classList.add("active");
-            wordDisplay.innerText = palabras[patronActual[posActual]];
+            
+            // Mostrar la palabra correspondiente en el display superior
+            // let tipo = patronActual[posActual];
+            // const info = parejaSeleccionada[tipo];
+            // wordDisplay.innerText = `${info.icono} ${info.texto}`;
+
             posActual++;
         } else {
+            // Fin de la secuencia de 8
             clearInterval(timerBeat);
             nivelActual++;
-            prepararRonda();
+            setTimeout(prepararRonda, 500);
         }
     };
 
@@ -162,13 +162,11 @@ function pausarJuego() {
     displayEstado.innerText = "Pausado";
     btnPause.classList.add("hidden");
     btnResume.classList.remove("hidden");
-    bloquearControles(false); 
 }
 
 function reanudarJuego() {
     if (!pausado) return;
     pausado = false;
-    bloquearControles(true); 
     miCronometro.start();
     if (musicaActiva) musica.play();
     btnPause.classList.remove("hidden");
@@ -184,8 +182,6 @@ function finalizarJuego(msg) {
     musica.pause();
     wordDisplay.innerText = msg;
     displayEstado.innerText = "Finalizado";
-    btnPause.classList.remove("hidden");
-    btnResume.classList.add("hidden");
     bloquearControles(false);
 }
 

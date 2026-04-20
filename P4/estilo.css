@@ -3,6 +3,7 @@
     --primary: #274f5a;
     --highlight: #ee3535;
     --card-bg: #f8fdf2;
+    --panel-bg: rgb(255, 134, 21); 
 }
 
 body {
@@ -15,12 +16,35 @@ body {
 }
 
 .game-container {
-    max-width: 900px;
+    max-width: 1000px;
     width: 100%;
     background: #ffffffaa;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ffffffaa;
+    padding-bottom: 10px;
+}
+
+.subtitle {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.game-description {
+    font-size: 0.9rem;
+    color: #555;
+    background: #ffffffaa;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 .main-layout {
@@ -29,8 +53,15 @@ body {
     flex-wrap: wrap;
 }
 
-.sidebar { flex: 1; min-width: 250px; }
-.game-area { flex: 2; min-width: 300px; }
+.sidebar { 
+    flex: 1; 
+    min-width: 250px; 
+}
+
+.game-area { 
+    flex: 2; 
+    min-width: 300px; 
+}
 
 .panel {
     background: rgb(255, 134, 21);
@@ -51,33 +82,40 @@ body {
 .cell {
     background: var(--card-bg);
     aspect-ratio: 1/1;
-    border: 2px solid transparent;
+    border: 3px solid #ddd;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s;
-    font-weight: bold;
-    color: #333;
+    transition: all 0.2s ease;
+    cursor: default;
+    overflow: hidden;
+    padding: 5px;
 }
 
-/* Clase para resaltar la imagen activa */
+.cell-icon {
+    font-size: 4rem;
+    margin-bottom: -5px;
+}
+
 .cell.active {
-    border-color: var(--highlight);
-    box-shadow: 0 0 15px var(--highlight);
-    transform: scale(1.05);
-    background: white;
+    border-color: var(--highlight) !important;
+    box-shadow: 0 0 20px var(--highlight);
+    transform: scale(1.08);
+    background: white; /* Resalta más */
+    z-index: 1;
 }
 
 .word-display {
-    font-size: 2rem;
+    font-size: 2.5rem;
     text-align: center;
-    padding: 20px;
+    padding: 15px;
     background: white;
     border-radius: 50px;
     margin: 10px 0;
     font-weight: bold;
+    border: 2px solid var(--panel-bg);
 }
 
 .status-bar {
@@ -99,20 +137,26 @@ body {
     font-weight: bold;
 }
 
-.btn.primary { background: #000; color: white; }
-.btn.secondary { background: #eee; }
+.btn.primary { 
+    background: #000; 
+    color: white; 
+}
 
-/* Clase para ocultar elementos */
+.btn.secondary { 
+    background: #eee; 
+}
+
+
 .hidden {
     display: none !important;
 }
 
-/* Opcional: para que el botón de reanudar sea verde y destaque */
 #btn-resume {
     background-color: #28a745;
     color: white;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .grid-8 { grid-template-columns: repeat(2, 1fr); }
+    .cell-icon { font-size: 3rem; }
 }

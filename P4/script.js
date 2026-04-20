@@ -3,10 +3,32 @@ const NIVELES = [
     { vel: 550 }, { vel: 480 }, { vel: 410 }, { vel: 340 }, { vel: 280 }
 ];
 
+//COn patrones
+// const NIVELES = [
+//     { vel: 550, pattern: [0,0,0,0, 1,1,1,1] }, 
+//     { vel: 480, pattern: [0,1,0,1, 0,1,0,1] }, 
+//     { vel: 410, pattern: [1,0,1,1, 0,0,1,0] }, 
+//     { vel: 340, pattern: [1,1,1,1, 0,0,0,0] }, 
+//     { vel: 280, pattern: [0,0,1,0, 1,1,0,1] }
+// ];
+
 const PALABRAS = {
-    "cama-casa": ["CAMA", "CASA"],
-    "pato-gato": ["PATO", "GATO"],
-    "luna-cuna": ["LUNA", "CUNA"]
+    "cama-casa": [
+        { texto: "CAMA", icono: "🛏️" },
+        { texto: "CASA", icono: "🏠" }
+    ],
+    "pato-gato": [
+        { texto: "PATO", icono: "🦆" },
+        { texto: "GATO", icono: "🐈" }
+    ],
+    "luna-cuna": [
+        { texto: "LUNA", icono: "🌙" },
+        { texto: "CUNA", icono: "👶" }
+    ],
+    "queso-beso": [
+        { texto: "QUESO", icono: "🧀" },
+        { texto: "BESO", icono: "💋" }
+    ]
 };
 
 // ================= ESTADO DEL JUEGO =================
@@ -30,7 +52,6 @@ const btnAudio = document.getElementById("btn-audio");
 const displayNivel = document.getElementById("display-nivel");
 const displayEstado = document.getElementById("display-estado");
 
-// Inicialización del cronómetro
 const miCronometro = new Cronometro(document.getElementById("display-tiempo"));
 
 // ================= FUNCIONES =================
@@ -44,10 +65,20 @@ function generarPatronAleatorio() {
 }
 
 function dibujarTableroEstatico() {
-    const palabras = PALABRAS[document.getElementById("secuencia").value];
+    const parejaSeleccionada = PALABRAS[document.getElementById("secuencia").value];
+    
     cells.forEach((cell, index) => {
         cell.classList.remove("active");
-        cell.innerText = palabras[patronActual[index]]; // Las palabras aparecen para que el usuario las lea
+        
+        // Obtenemos el tipo (0 o 1) del patrón predefinido del nivel
+        let tipo = patronActual[index];
+        const infoPalabra = parejaSeleccionada[tipo];
+
+        // Creamos la estructura HTML interna (icono + texto)
+        cell.innerHTML = `
+            <div class="cell-icon">${infoPalabra.icono}</div>
+            <div class="cell-text">${infoPalabra.texto}</div>
+        `;
     });
 }
 
@@ -84,14 +115,11 @@ function prepararRonda() {
 
     patronActual = generarPatronAleatorio();
     posActual = 0; 
-    dibujarTableroEstatico(); // AQUÍ aparecen las palabras para leer
+    dibujarTableroEstatico(); 
     
     displayEstado.innerText = "¡Lee las tarjetas!";
     wordDisplay.innerText = `Nivel ${nivelActual + 1}`;
 
-    // TIEMPOS DE ESPERA PARA EL SILBIDO:
-    // Nivel 1: Esperamos 2.1s (lectura) antes de que entre el silbido
-    // Intermedios: 0.8s para sincronizar con la siguiente frase del silbido
     let esInicio = (nivelActual === parseInt(document.getElementById("nivel-inicial").value));
     let tiempoHastaSilbido = esInicio ? 2100 : 800;
 
@@ -121,7 +149,7 @@ function iniciarRonda() {
         }
     };
 
-    realizarSalto(); // Empieza justo con el silbido
+    realizarSalto(); 
     timerBeat = setInterval(realizarSalto, config.vel);
 }
 

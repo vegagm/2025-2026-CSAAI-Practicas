@@ -1,49 +1,92 @@
-body {
-    background-color: #1a1a1a;
-    color: white;
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+:root {
+  --bg: #10131a;
+  --panel: #1b2232;
+  --panel-2: #242d42;
+  --text: #f4f7ff;
+  --muted: #b6c2dd;
+  --accent: #8eb7ff;
+  --field: #2c8f4a;
+  --power: #ffd54a;
 }
 
-#game-container {
-    text-align: center;
-    position: relative;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg, #0d1118, #121827 60%, #0f131d);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+}
+
+.header p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 16px;
+}
+
+.stage,
+.panel {
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 20px;
 }
 
 canvas {
-    background-color: #2e7d32; /* Verde césped */
-    border: 4px solid white;
-    border-radius: 5px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    cursor: crosshair;
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  background: var(--field);
 }
 
-.overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    background: #4caf50;
-    border: none;
-    color: white;
-    transition: 0.3s;
+.block {
+  background: var(--panel-2);
+  border-radius: 16px;
+  padding: 16px;
 }
 
-button:hover { background: #45a049; }
+.block h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
 
-.hidden { display: none; }
+#state {
+  margin: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+ul {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.6;
+}

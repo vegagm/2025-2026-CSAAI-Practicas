@@ -1,263 +1,336 @@
-// --- Configuración y Constantes ---
-const canvas = document.getElementById('field');
-const ctx = canvas.getContext('2d');
-const scoreHomeEl = document.getElementById('score-home');
-const scoreAwayEl = document.getElementById('score-away');
-const modeTextEl = document.getElementById('game-mode-text');
-const overlay = document.getElementById('overlay');
-const menu = document.getElementById('menu');
-const messageBox = document.getElementById('message');
-const announcement = document.getElementById('announcement');
-const countdownEl = document.getElementById('countdown');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const stateEl = document.getElementById("state");
 
-// Ajuste de tamaño del canvas
-canvas.width = 800;
-canvas.height = 500;
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
 
-const FRICTION = 0.98;
-const BALL_BOUNCE = 0.7;
-const PLAYER_SPEED = 3;
-const BOT_SPEED = 2.2;
-const KICK_FORCE = 7;
-
-let gameState = 'MENU'; // MENU, COUNTDOWN, PLAYING, GOAL, FINISHED
-let gameMode = '3goals'; // 3goals, golden
-let score = { home: 0, away: 0 };
-let timer = 0;
+// --- ESTADO DEL JUEGO ---
+let gameState = "MENU"; // MENU, COUNTDOWN, PLAYING, END
+let gameMode = ""; // "3goals" o "golden"
+let score = { player: 0, bot: 0 };
+let countdownValue = 3;
 let keys = {};
 
-// --- Entidades ---
-class Entity {
-    constructor(x, y, radius, color) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.color = color;
-        this.vx = 0;
-        this.vy = 0;
-    }
+// --- ENTIDADES ---
+const player = {
+    x: 150,
+    y: HEIGHT / 2,
+    radius: 22,
+    color: "#2d7ff9",
+    speed: 4,
+    angle: 0 // Para orientar el disparo
+};
 
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.closePath();
-    }
+const bot = {
+    x: WIDTH - 150,
+    y: HEIGHT / 2,
+    radius: 22,
+    color: "#f92d2d",
+    speed: 3
+};
 
-    applyPhysics() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= FRICTION;
-        this.vy *= FRICTION;
+const ball = {
+    x: WIDTH / 2,
+    y: HEIGHT / 2,
+    radius: 12,
+    vx: 0,
+    vy: 0,
+    friction: 0.98
+};
 
-        // Colisión con bordes (rebote)
-        if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) {
-            this.vx *= -BALL_BOUNCE;
-            this.x = this.x < this.radius ? this.radius : canvas.width - this.radius;
-        }
-        if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) {
-            this.vy *= -BALL_BOUNCE;
-            this.y = this.y < this.radius ? this.radius : canvas.height - this.radius;
-        }
-    }
-}
+const powerShot = {
+    charging: false,
+    power: 0,
+    minPower: 5,
+    maxPower: 18,
+    chargeSpeed: 0.2
+};
 
-class Player extends Entity {
-    constructor(x, y, color, isBot = false) {
-        super(x, y, 15, color);
-        this.angle = 0; // Dirección de disparo
-        this.isBot = isBot;
-    }
+// --- CONTROLES ---
+window.addEventListener("keydown", (e) => {
+    keys[e.code] = true;
+    if (e.code === "Space") startPowerShot();
+    if (e.key.toLowerCase() === "r") resetGame();
+});
+window.addEventListener("keyup", (e) => {
+    keys[e.code] = false;
+    if (e.code === "Space") releasePowerShot();
+});
 
-    update() {
-        if (this.isBot) {
-            this.aiLogic();
-        } else {
-            if (keys['ArrowUp']) this.vy -= PLAYER_SPEED * 0.1;
-            if (keys['ArrowDown']) this.vy += PLAYER_SPEED * 0.1;
-            if (keys['ArrowLeft']) this.vx -= PLAYER_SPEED * 0.1;
-            if (keys['ArrowRight']) this.vx += PLAYER_SPEED * 0.1;
-            
-            // Rotación de dirección de chute
-            if (keys['a'] || keys['A']) this.angle -= 0.1;
-            if (keys['d'] || keys['D']) this.angle += 0.1;
-
-            if (keys[' ']) this.shoot();
-        }
-
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= 0.9; // Frenado más rápido para jugadores (control)
-        this.vy *= 0.9;
-
-        // Limites del campo para jugadores
-        this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
-        this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, this.y));
-    }
-
-    draw() {
-        super.draw();
-        // Dibujar indicador de dirección
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + Math.cos(this.angle) * 25, this.y + Math.sin(this.angle) * 25);
-        ctx.strokeStyle = 'white';
-        ctx.stroke();
-    }
-
-    shoot() {
-        const dist = Math.hypot(ball.x - this.x, ball.y - this.y);
-        if (dist < this.radius + ball.radius + 5) {
-            ball.vx = Math.cos(this.angle) * KICK_FORCE;
-            ball.vy = Math.sin(this.angle) * KICK_FORCE;
-        }
-    }
-
-    aiLogic() {
-        // IA Simple: seguir la pelota
-        const dx = ball.x - this.x;
-        const dy = ball.y - this.y;
-        const angleToBall = Math.atan2(dy, dx);
-        
-        this.vx += Math.cos(angleToBall) * BOT_SPEED * 0.05;
-        this.vy += Math.sin(angleToBall) * BOT_SPEED * 0.05;
-
-        // Chutar si está muy cerca
-        if (Math.hypot(dx, dy) < this.radius + ball.radius + 2) {
-            this.angle = angleToBall;
-            this.shoot();
-        }
-    }
-}
-
-// --- Instancias ---
-const player = new Player(150, canvas.height / 2, '#0095DD');
-const bot = new Player(canvas.width - 150, canvas.height / 2, '#FF4136', true);
-const ball = new Entity(canvas.width / 2, canvas.height / 2, 8, '#FFFFFF');
-
-// --- Control de Teclado ---
-window.addEventListener('keydown', e => keys[e.key] = true);
-window.addEventListener('keyup', e => keys[e.key] = false);
-
-// --- Funciones de Juego ---
-function startGame(mode) {
+// --- LÓGICA DE MODOS Y MENÚ ---
+function selectMode(mode) {
     gameMode = mode;
-    score = { home: 0, away: 0 };
-    scoreHomeEl.innerText = "0";
-    scoreAwayEl.innerText = "0";
-    modeTextEl.innerText = mode === '3goals' ? "A 3 goles" : "Gol de Oro";
+    score = { player: 0, bot: 0 };
+    startMatch();
+}
+
+// Inyectar botones de menú si el estado es MENU
+function drawMenu() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("BOT LEAGUE", WIDTH / 2, HEIGHT / 2 - 100);
+    ctx.font = "20px Arial";
+    ctx.fillText("Pulsa '1' para 3 Goles | Pulsa '2' para Gol de Oro", WIDTH / 2, HEIGHT / 2);
+    
+    if (keys["Digit1"]) selectMode("3goals");
+    if (keys["Digit2"]) selectMode("golden");
+}
+
+function startMatch() {
     resetPositions();
-    overlay.classList.add('hidden');
-    startCountdown();
+    gameState = "COUNTDOWN";
+    countdownValue = 3;
+    let timer = setInterval(() => {
+        countdownValue--;
+        if (countdownValue <= 0) {
+            clearInterval(timer);
+            gameState = "PLAYING";
+        }
+    }, 1000);
 }
 
 function resetPositions() {
-    player.x = 150; player.y = canvas.height / 2;
-    player.vx = 0; player.vy = 0;
-    bot.x = canvas.width - 150; bot.y = canvas.height / 2;
-    bot.vx = 0; bot.vy = 0;
-    ball.x = canvas.width / 2; ball.y = canvas.height / 2;
+    player.x = 150; player.y = HEIGHT / 2;
+    bot.x = WIDTH - 150; bot.y = HEIGHT / 2;
+    ball.x = WIDTH / 2; ball.y = HEIGHT / 2;
     ball.vx = 0; ball.vy = 0;
+    powerShot.charging = false;
 }
 
-function startCountdown() {
-    gameState = 'COUNTDOWN';
-    let count = 3;
-    messageBox.classList.remove('hidden');
-    announcement.innerText = "¡PREPARADOS!";
+// --- MECÁNICAS ---
+function update() {
+    if (gameState !== "PLAYING") return;
+
+    // Movimiento Jugador
+    if (keys["ArrowUp"]) player.y -= player.speed;
+    if (keys["ArrowDown"]) player.y += player.speed;
+    if (keys["ArrowLeft"]) player.x -= player.speed;
+    if (keys["ArrowRight"]) player.x += player.speed;
+
+    // Orientación (A/D)
+    if (keys["KeyA"]) player.angle -= 0.05;
+    if (keys["KeyD"]) player.angle += 0.05;
+
+    // IA del Bot con "error humano"
+    const dx = ball.x - bot.x;
+    const dy = ball.y - bot.y;
+    if (Math.abs(dx) > 10) bot.x += Math.sign(dx) * bot.speed;
+    if (Math.abs(dy) > 10) bot.y += Math.sign(dy) * bot.speed;
+
+    // Aplicamos los límites a ambos personajes para que no se salgan
+    keepInside(player);
+    keepInside(bot);
+
+    // Colisiones Pelota con Personajes
+    checkCollision(player);
+    checkCollision(bot);
+
+    updateBall();
+    updatePowerShot();
+    checkGoal();
+}
+
+function keepInside(obj) {
+    // Limitar X
+    if (obj.x - obj.radius < 0) obj.x = obj.radius;
+    if (obj.x + obj.radius > WIDTH) obj.x = WIDTH - obj.radius;
     
-    const interval = setInterval(() => {
-        countdownEl.innerText = count;
-        if (count === 0) {
-            clearInterval(interval);
-            messageBox.classList.add('hidden');
-            gameState = 'PLAYING';
+    // Limitar Y
+    if (obj.y - obj.radius < 0) obj.y = obj.radius;
+    if (obj.y + obj.radius > HEIGHT) obj.y = HEIGHT - obj.radius;
+}
+
+
+function checkCollision(obj) {
+    let dx = ball.x - obj.x;
+    let dy = ball.y - obj.y;
+    let distance = Math.hypot(dx, dy);
+    let minDistance = obj.radius + ball.radius;
+
+    if (distance < minDistance) {
+        let angle = Math.atan2(dy, dx);
+        
+        // Empujoncito suave al tocarla
+        let push = (obj === player) ? 3 : 2; 
+        ball.vx += Math.cos(angle) * push;
+        ball.vy += Math.sin(angle) * push;
+
+        // Corregir posición para que no se "fusionen"
+        let overlap = minDistance - distance;
+        ball.x += Math.cos(angle) * overlap;
+        ball.y += Math.sin(angle) * overlap;
+    }
+}
+
+function updateBall() {
+    // 1. Movimiento básico e inercia
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    // 2. Fricción constante (hace que se pare poco a poco)
+    ball.vx *= ball.friction;
+    ball.vy *= ball.friction;
+
+    // 3. Rebotes en bordes laterales (Eje X)
+    // Si la pelota NO está en el hueco de la portería (y < 180 o y > 340)
+    if (ball.y < 180 || ball.y > 340) {
+        if (ball.x - ball.radius < 0) { // Pared izquierda
+            ball.x = ball.radius;
+            ball.vx *= -0.5; // Rebote suave (pierde la mitad de fuerza)
         }
-        count--;
-    }, 800);
+        if (ball.x + ball.radius > WIDTH) { // Pared derecha
+            ball.x = WIDTH - ball.radius;
+            ball.vx *= -0.5;
+        }
+    }
+
+    // 4. Rebotes en bordes superior e inferior (Eje Y)
+    if (ball.y - ball.radius < 0) {
+        ball.y = ball.radius;
+        ball.vy *= -0.5;
+    }
+    if (ball.y + ball.radius > HEIGHT) {
+        ball.y = HEIGHT - ball.radius;
+        ball.vy *= -0.5;
+    }
 }
 
 function checkGoal() {
-    // Portería izquierda (Away marca)
-    if (ball.x - ball.radius <= 0 && ball.y > 180 && ball.y < 320) {
-        handleGoal('away');
-    }
-    // Portería derecha (Home marca)
-    if (ball.x + ball.radius >= canvas.width && ball.y > 180 && ball.y < 320) {
-        handleGoal('home');
+    if (ball.y > 180 && ball.y < 340) {
+        if (ball.x < 0) scorePoint("bot");
+        if (ball.x > WIDTH) scorePoint("player");
     }
 }
 
-function handleGoal(team) {
-    score[team]++;
-    scoreHomeEl.innerText = score.home;
-    scoreAwayEl.innerText = score.away;
-    gameState = 'GOAL';
+function scorePoint(winner) {
+    score[winner]++;
+    stateEl.textContent = winner === "player" ? "¡GOOOL!" : "¡GOL DEL RIVAL!";
     
-    announcement.innerText = team === 'home' ? "¡GOOOL!" : "¡GOL RIVAL!";
-    messageBox.classList.remove('hidden');
-    countdownEl.innerText = "";
-
-    if ((gameMode === 'golden') || (gameMode === '3goals' && (score.home === 3 || score.away === 3))) {
-        setTimeout(endGame, 1500);
+    if (gameMode === "golden" || (gameMode === "3goals" && score[winner] >= 3)) {
+        gameState = "END";
     } else {
-        setTimeout(() => {
-            resetPositions();
-            startCountdown();
-        }, 1500);
+        gameState = "COUNTDOWN";
+        setTimeout(startMatch, 2000);
     }
 }
 
-function endGame() {
-    gameState = 'FINISHED';
-    announcement.innerText = score.home > score.away ? "¡HAS GANADO EL PARTIDO!" : "DERROTA...";
-    countdownEl.innerHTML = `<button onclick="location.reload()">Volver al Menú</button>`;
+// --- POWER SHOT ---
+function startPowerShot() {
+    if (gameState === "PLAYING") powerShot.charging = true;
 }
 
-// --- Bucle Principal ---
-function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function updatePowerShot() {
+    if (powerShot.charging) {
+        powerShot.power = Math.min(powerShot.power + powerShot.chargeSpeed, powerShot.maxPower);
+    }
+}
 
-    // Dibujar campo (Líneas decorativas)
-    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+
+function releasePowerShot() {
+    if (!powerShot.charging) return;
+
+    let d = Math.hypot(ball.x - player.x, ball.y - player.y);
+    
+    // Aumentamos el margen de disparo (player.radius + ball.radius + 30)
+    if (d < player.radius + ball.radius + 30) {
+        // El chute ahora es mucho más potente que el simple toque
+        ball.vx = Math.cos(player.angle) * powerShot.power;
+        ball.vy = Math.sin(player.angle) * powerShot.power;
+        
+        stateEl.textContent = "¡DISPARO POTENTE!";
+    } else {
+        stateEl.textContent = "Demasiado lejos para chutar";
+    }
+
+    powerShot.charging = false;
+    powerShot.power = 0;
+}
+
+// --- DIBUJO ---
+function draw() {
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    drawBackground();
+    
+    // Porterías
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 180, 5, 160);
+    ctx.fillRect(WIDTH - 5, 180, 5, 160);
+
+    drawBall();
+    drawEntity(player);
+    drawEntity(bot);
+    drawUI();
+
+    if (gameState === "MENU") drawMenu();
+    if (gameState === "COUNTDOWN") {
+        ctx.fillStyle = "white";
+        ctx.font = "80px Arial";
+        ctx.fillText(countdownValue, WIDTH / 2, HEIGHT / 2);
+    }
+    if (gameState === "END") {
+        ctx.fillStyle = "rgba(0,0,0,0.8)";
+        ctx.fillRect(0,0,WIDTH,HEIGHT);
+        ctx.fillStyle = "white";
+        ctx.fillText("PARTIDA FINALIZADA", WIDTH/2, HEIGHT/2);
+        ctx.font = "20px Arial";
+        ctx.fillText("Pulsa R para reiniciar", WIDTH/2, HEIGHT/2 + 50);
+    }
+}
+
+function drawBackground() {
+    ctx.fillStyle = "#2c8f4a";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
-    ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeRect(0, 0, WIDTH, HEIGHT);
     ctx.beginPath();
-    ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.moveTo(WIDTH / 2, 0); ctx.lineTo(WIDTH / 2, HEIGHT);
     ctx.stroke();
-    ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
+}
+
+function drawEntity(obj) {
+    ctx.beginPath();
+    ctx.arc(obj.x, obj.y, obj.radius, 0, Math.PI * 2);
+    ctx.fillStyle = obj.color;
+    ctx.fill();
     ctx.stroke();
-
-    // Dibujar Porterías
-    ctx.fillStyle = "#333";
-    ctx.fillRect(0, 180, 10, 140);
-    ctx.fillRect(canvas.width - 10, 180, 10, 140);
-
-    if (gameState === 'PLAYING' || gameState === 'GOAL') {
-        player.update();
-        bot.update();
-        ball.applyPhysics();
-        checkGoal();
-
-        // Colisión Jugador-Pelota básica
-        [player, bot].forEach(p => {
-            const dx = ball.x - p.x;
-            const dy = ball.y - p.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist < p.radius + ball.radius) {
-                const angle = Math.atan2(dy, dx);
-                ball.vx += Math.cos(angle) * 0.5;
-                ball.vy += Math.sin(angle) * 0.5;
-            }
-        });
+    
+    if (obj === player) {
+        // Flecha de dirección
+        ctx.beginPath();
+        ctx.moveTo(obj.x, obj.y);
+        ctx.lineTo(obj.x + Math.cos(player.angle) * 40, obj.y + Math.sin(player.angle) * 40);
+        ctx.stroke();
     }
+}
 
-    player.draw();
-    bot.draw();
-    ball.draw();
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    ctx.stroke();
+}
 
+function drawUI() {
+    stateEl.textContent = `Marcador: ${score.player} - ${score.bot} | Modo: ${gameMode}`;
+    if (powerShot.charging) {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(player.x - 25, player.y - 40, powerShot.power * 3, 5);
+    }
+}
+
+function loop() {
+    update();
+    draw();
     requestAnimationFrame(loop);
 }
+
+function resetGame() { location.reload(); }
 
 loop();

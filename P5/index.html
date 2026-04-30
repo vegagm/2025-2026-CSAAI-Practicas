@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOT LEAGUE - Arcade Soccer</title>
-    <link rel="estilo" href="estilo.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bot League Power Shot</title>
+  <link rel="stylesheet" href="estilo2.css">
+  <script src="juego2.js" defer></script>
 </head>
-
 <body>
-    <div id="game-container">
-        <header>
-            <h1>Bot League</h1>
-            <div id="scoreboard">
-                <span id="score-home">0</span> - <span id="score-away">0</span>
-                <p id="game-mode-text"></p>
-            </div>
-        </header>
+  <main class="app">
+    <header class="header">
+      <h1>Bot League Power Shot</h1>
+      <p>
+        Una pequeña escena en canvas para practicar acciones cargadas:
+        mantener una tecla, acumular potencia y soltar para disparar.
+      </p>
+    </header>
 
-        <canvas id="field"></canvas>
+    <section class="layout">
+      <section class="stage">
+        <canvas id="gameCanvas" width="900" height="520"></canvas>
+      </section>
 
-        <!-- Pantallas superpuestas -->
-        <div id="overlay" class="overlay">
-            <div id="menu" class="menu-content">
-                <h2>Elige modo de juego</h2>
-                <button onclick="startGame('3goals')">Partido a 3 goles</button>
-                <button onclick="startGame('golden')">Gol de Oro</button>
-                <p class="controls-hint">Mover: Flechas | Chutar: Espacio | Girar: A/D</p>
-            </div>
-            <div id="message" class="hidden">
-                <h2 id="announcement">¡GOOOL!</h2>
-                <p id="countdown"></p>
-            </div>
+      <aside class="panel">
+        <div class="block">
+          <h2>Estado</h2>
+          <p id="state">Preparado para cargar el disparo</p>
         </div>
-    </div>
-    <script src="juego.js"></script>
 
+        <div class="block">
+          <h2>Controles</h2>
+          <ul>
+            <li><strong>Espacio</strong>: mantener pulsado para cargar</li>
+            <li><strong>Soltar espacio</strong>: disparar</li>
+            <li><strong>R</strong>: reiniciar la escena</li>
+          </ul>
+        </div>
+
+        <div class="block">
+          <h2>Mecánica</h2>
+          <ul>
+            <li>El jugador carga potencia mientras mantiene pulsada la tecla.</li>
+            <li>La barra muestra la potencia acumulada.</li>
+            <li>Al soltar la tecla, el balón sale disparado.</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+  </main>
 </body>
 </html>

@@ -1,52 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bot League Power Shot</title>
-  <link rel="stylesheet" href="estilo2.css">
-  <script src="juego2.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot League Arcade</title>
+    <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
-  <main class="app">
-    <header class="header">
-      <h1>Bot League Power Shot</h1>
-      <p>
-        Una pequeña escena en canvas para practicar acciones cargadas:
-        mantener una tecla, acumular potencia y soltar para disparar.
-      </p>
-    </header>
+    <div id="game-container">
+        <header>
+            <h1>Bot League</h1>
+            <div id="scoreboard">
+                <span id="state">Selecciona un modo para empezar</span>
+            </div>
+        </header>
 
-    <section class="layout">
-      <section class="stage">
-        <canvas id="gameCanvas" width="900" height="520"></canvas>
-      </section>
-
-      <aside class="panel">
-        <div class="block">
-          <h2>Estado</h2>
-          <p id="state">Preparado para cargar el disparo</p>
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="800" height="500"></canvas>
+            
+            <!-- Pantalla de Inicio / Menú -->
+            <div id="overlay" class="overlay">
+                <div id="menu">
+                    <h2>Elige modo de juego</h2>
+                    <button onclick="selectMode('3goals')">Partido a 3 goles</button>
+                    <button onclick="selectMode('golden')">Gol de Oro</button>
+                    <p class="controls-hint">Mover: Flechas | Girar: A/D | Chutar: Espacio (Mantener)</p>
+                </div>
+            </div>
         </div>
-
-        <div class="block">
-          <h2>Controles</h2>
-          <ul>
-            <li><strong>Espacio</strong>: mantener pulsado para cargar</li>
-            <li><strong>Soltar espacio</strong>: disparar</li>
-            <li><strong>R</strong>: reiniciar la escena</li>
-          </ul>
-        </div>
-
-        <div class="block">
-          <h2>Mecánica</h2>
-          <ul>
-            <li>El jugador carga potencia mientras mantiene pulsada la tecla.</li>
-            <li>La barra muestra la potencia acumulada.</li>
-            <li>Al soltar la tecla, el balón sale disparado.</li>
-          </ul>
-        </div>
-      </aside>
-    </section>
-  </main>
+    </div>
+    <script src="juego.js"></script>
 </body>
 </html>

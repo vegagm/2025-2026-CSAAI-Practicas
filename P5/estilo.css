@@ -1,92 +1,67 @@
 :root {
-  --bg: #10131a;
-  --panel: #1b2232;
-  --panel-2: #242d42;
-  --text: #f4f7ff;
-  --muted: #b6c2dd;
-  --accent: #8eb7ff;
-  --field: #2c8f4a;
-  --power: #ffd54a;
-}
-
-* {
-  box-sizing: border-box;
+    --bg: #1a1a1a;
+    --field: #2c8f4a;
+    --accent: #4caf50;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(180deg, #0d1118, #121827 60%, #0f131d);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 24px;
+    background-color: var(--bg);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-.app {
-  max-width: 1200px;
-  margin: 0 auto;
+#game-container {
+    text-align: center;
+    position: relative;
 }
 
-.header {
-  margin-bottom: 20px;
-}
-
-.header h1 {
-  margin: 0 0 8px;
-}
-
-.header p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 1.4fr 0.8fr;
-  gap: 16px;
-}
-
-.stage,
-.panel {
-  background: var(--panel);
-  border-radius: 20px;
-  padding: 20px;
+.canvas-wrapper {
+    position: relative;
+    display: inline-block;
 }
 
 canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-  background: var(--field);
+    background-color: var(--field);
+    border: 5px solid white;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
 }
 
-.block {
-  background: var(--panel-2);
-  border-radius: 16px;
-  padding: 16px;
+.hidden { display: none !important; }
+
+button {
+    padding: 15px 25px;
+    margin: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--accent);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    transition: 0.2s;
 }
 
-.block h2 {
-  margin-top: 0;
-  font-size: 1rem;
-}
+button:hover { background: #45a049; transform: scale(1.05); }
 
 #state {
-  margin: 0;
-  color: var(--accent);
-  font-weight: bold;
-}
-
-ul {
-  margin: 0;
-  padding-left: 18px;
-  line-height: 1.6;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #ffd54a;
 }

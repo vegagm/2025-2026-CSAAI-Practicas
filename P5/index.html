@@ -18,13 +18,13 @@
         <div class="canvas-wrapper">
             <canvas id="gameCanvas" width="800" height="500"></canvas>
             
-            <!-- Pantalla de Inicio / Menú -->
             <div id="overlay" class="overlay">
-                <div id="menu">
+                <div id="menu-content">
+                    <!-- El contenido cambiará dinámicamente mediante JS -->
                     <h2>Elige modo de juego</h2>
                     <button onclick="selectMode('3goals')">Partido a 3 goles</button>
                     <button onclick="selectMode('golden')">Gol de Oro</button>
-                    <p class="controls-hint">Mover: Flechas | Girar: A/D | Chutar: Espacio (Mantener)</p>
+                    <p class="controls-hint">Mover: Flechas | Girar: A/D | Chutar: Espacio</p>
                 </div>
             </div>
         </div>

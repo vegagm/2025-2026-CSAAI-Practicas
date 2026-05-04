@@ -11,4 +11,4 @@ Práctica 3 (Juego Invasión Alienígena): https://vegagm.github.io/2025-2026-CS
 
 Práctica 4 (Juego de Beat the Word): https://vegagm.github.io/2025-2026-CSAAI-Practicas/P4/
 
-Práctica 5 ():
+Práctica 5 (Juego Bot League Arcade): https://vegagm.github.io/2025-2026-CSAAI-Practicas/P5/

@@ -18,39 +18,82 @@ let keys = {};
 const kickSound = new Audio("pelota.m4a");
 const goalSound = new Audio("gol.m4a");
 
-// 🎵 MÚSICA DE FONDO
-const bgMusic = new Audio("music.mp3");
+// 🎵 SISTEMA DE MÚSICA (4 CANCIONES)
+const tracks = [
+    { name: "Canción 1", file: "musica1.m4a" },
+    { name: "Canción 2", file: "musica2.m4a" },
+    { name: "Canción 3", file: "musica3.m4a" },
+    { name: "Canción 4", file: "musica4.m4a" }
+];
+
+let currentTrackIndex = 0;
+let bgMusic = new Audio(tracks[currentTrackIndex].file);
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
 
+let isMuted = false;
+
 function playMusicFromStart() {
     bgMusic.currentTime = 0;
-    if (!isMuted) {
-        bgMusic.play();
-    }
+    if (!isMuted) bgMusic.play();
+}
+
+function changeTrack(index) {
+    currentTrackIndex = index;
+
+    bgMusic.pause();
+    bgMusic = new Audio(tracks[index].file);
+    bgMusic.loop = true;
+    bgMusic.volume = 0.5;
+
+    playMusicFromStart();
+    renderMenu(); // 🔥 refresca UI
 }
 
 function toggleMusic() {
     isMuted = !isMuted;
 
-    if (isMuted) {
-        bgMusic.pause();
-    } else {
-        bgMusic.play();
-    }
+    if (isMuted) bgMusic.pause();
+    else bgMusic.play();
 
-    updateMusicButton();
+    renderMenu();
 }
 
-function updateMusicButton() {
-    const btn = document.getElementById("music-btn");
-    if (!btn) return;
-    btn.textContent = isMuted ? "🔇" : "🔊";
+// 🧩 MENÚ CENTRALIZADO (IMPORTANTE)
+function renderMenu() {
+    menuContent.innerHTML = `
+        <h2>Elige modo de juego</h2>
+
+        <button onclick="selectMode('3goals')">Partido a 3 goles</button>
+        <button onclick="selectMode('golden')">Gol de Oro</button>
+
+        <h3>🎵 Música</h3>
+        <div>
+            ${tracks.map((t, i) => `
+                <button onclick="changeTrack(${i})"
+                    style="background:${i === currentTrackIndex ? '#4caf50' : '#444'}">
+                    ${t.name}
+                </button>
+            `).join("")}
+        </div>
+
+        <button onclick="toggleMusic()" style="
+            position:absolute;
+            top:15px;
+            right:15px;
+            font-size:20px;
+            padding:10px;
+            border-radius:50%;
+        ">
+            ${isMuted ? "🔇" : "🔊"}
+        </button>
+
+        <p class="controls-hint">
+            Mover: Flechas | Girar: A/D | Chutar: Espacio<br>
+            R: Reiniciar | M: Menú
+        </p>
+    `;
 }
-
-
-
-let isMuted = false;
 
 // --- ENTIDADES ---
 const player = { x: 200, y: HEIGHT / 2, radius: 18, color: "#2d7ff9", speed: 4.5, angle: 0 };
@@ -103,15 +146,8 @@ function backToMenu() {
     gameState = "MENU";
     gameMode = "";
     overlay.classList.remove("hidden");
-
     playMusicFromStart();
-    
-    menuContent.innerHTML = `
-        <h2>Elige modo de juego</h2>
-        <button onclick="selectMode('3goals')">Partido a 3 goles</button>
-        <button onclick="selectMode('golden')">Gol de Oro</button>
-        <p class="controls-hint">Mover: Flechas | Girar: A/D | Chutar: Espacio<br>R: Reiniciar | M: Menú</p>
-    `;
+    renderMenu(); // 🔥 USAMOS MENÚ DINÁMICO
 }
 
 // --- PARTIDA ---
@@ -147,7 +183,6 @@ function resetPositions() {
 function update() {
     if (gameState !== "PLAYING") return;
 
-    // Movimiento jugador
     if (keys["ArrowUp"]) player.y -= player.speed;
     if (keys["ArrowDown"]) player.y += player.speed;
     if (keys["ArrowLeft"]) player.x -= player.speed;
@@ -157,30 +192,8 @@ function update() {
     keepInside(player);
 
     bots.forEach(b => {
-        let targetX, targetY;
-
-        if (b.role === "portero") {
-            let goalLineX = (b.team === "player") ? 60 : WIDTH - 60;
-            targetX = goalLineX;
-
-            let mitadCampo = (b.team === "player") ? ball.x < WIDTH/2 : ball.x > WIDTH/2;
-            targetY = mitadCampo ? ball.y : HEIGHT/2;
-
-            if (Math.hypot(ball.x - b.x, ball.y - b.y) < 80) {
-                targetX = ball.x;
-                targetY = ball.y;
-            }
-
-        } else {
-            // 🧠 IA MEJORADA
-            if (Math.hypot(ball.x - b.x, ball.y - b.y) < 150) {
-                targetX = ball.x;
-                targetY = ball.y;
-            } else {
-                targetX = ball.x - 40;
-                targetY = ball.y;
-            }
-        }
+        let targetX = ball.x;
+        let targetY = ball.y;
 
         let dx = targetX - b.x;
         let dy = targetY - b.y;
@@ -237,7 +250,6 @@ function checkCollision(obj) {
         ball.vx = nx * speed;
         ball.vy = ny * speed;
 
-        // 🔊 sonido golpe
         kickSound.currentTime = 0;
         kickSound.play();
     }
@@ -251,7 +263,6 @@ function releasePowerShot() {
         ball.vx = Math.cos(player.angle) * powerShot.power;
         ball.vy = Math.sin(player.angle) * powerShot.power;
 
-        // 🔊 sonido disparo
         kickSound.currentTime = 0;
         kickSound.play();
     }
@@ -269,27 +280,21 @@ function scorePoint(who) {
         goalMessage = "¡GOL RIVAL!";
     }
 
-    // 🔊 sonido gol
     goalSound.play();
 
     const endGolden = gameMode === "golden" && (score.player > 0 || score.bot > 0);
     const end3 = gameMode === "3goals" && (score.player >= 3 || score.bot >= 3);
 
-    if (endGolden || end3) {
-        showEndScreen();
-    } else {
-        startCountdown();
-    }
+    if (endGolden || end3) showEndScreen();
+    else startCountdown();
 }
 
 function showEndScreen() {
     gameState = "END";
     overlay.classList.remove("hidden");
 
-    const titulo = score.player > score.bot ? "¡VICTORIA!" : "DERROTA...";
-
     menuContent.innerHTML = `
-        <h2>${titulo}</h2>
+        <h2>${score.player > score.bot ? "¡VICTORIA!" : "DERROTA..."}</h2>
         <p>${score.player} - ${score.bot}</p>
         <button onclick="resetMatch()">Reiniciar</button>
         <button onclick="backToMenu()" style="background:#555">Menú</button>
@@ -303,83 +308,31 @@ function keepInside(obj) {
 
 function draw() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    
-    // ===== CAMPO (TU VERSIÓN ORIGINAL) =====
-    ctx.strokeStyle = "white"; 
-    ctx.lineWidth = 2;
+
+    ctx.strokeStyle = "white";
     ctx.strokeRect(10, 10, WIDTH-20, HEIGHT-20);
 
-    ctx.beginPath(); 
-    ctx.moveTo(WIDTH/2, 10); 
-    ctx.lineTo(WIDTH/2, HEIGHT-10); 
-    ctx.stroke();
-
-    ctx.beginPath(); 
-    ctx.arc(WIDTH/2, HEIGHT/2, 50, 0, Math.PI*2); 
-    ctx.stroke();
-
-    // ===== PORTERÍAS (TU VERSIÓN ORIGINAL) =====
-    ctx.fillStyle = "white";
     ctx.fillRect(0, 180, 8, 140);
     ctx.fillRect(WIDTH-8, 180, 8, 140);
 
-    // ===== PELOTA =====
-    ctx.beginPath(); 
+    ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-    ctx.fillStyle = "white"; 
-    ctx.fill(); 
-    ctx.stroke();
+    ctx.fill();
 
-    // ===== JUGADORES (TU VERSIÓN ORIGINAL + FLECHA) =====
     [player, ...bots].forEach(b => {
-        ctx.beginPath(); 
+        ctx.beginPath();
         ctx.arc(b.x, b.y, b.radius, 0, Math.PI*2);
-        ctx.fillStyle = b.color; 
-        ctx.fill(); 
-        ctx.stroke();
+        ctx.fillStyle = b.color;
+        ctx.fill();
 
-        // 🔥 FLECHA DEL JUGADOR (LA QUE QUERÍAS)
         if (b === player) {
-            ctx.beginPath(); 
-            ctx.strokeStyle = "yellow"; 
-            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.strokeStyle = "yellow";
             ctx.moveTo(b.x, b.y);
-            ctx.lineTo(
-                b.x + Math.cos(b.angle) * 30, 
-                b.y + Math.sin(b.angle) * 30
-            );
+            ctx.lineTo(b.x + Math.cos(b.angle)*30, b.y + Math.sin(b.angle)*30);
             ctx.stroke();
         }
     });
-
-    // ===== MARCADOR (TU TEXTO ORIGINAL) =====
-    stateEl.textContent = `MARCADOR: ${score.player} - ${score.bot} | MODO: ${gameMode}`;
-
-    // ===== MARCADOR EXTRA EN CANVAS (LO NUEVO) =====
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "white";
-    ctx.fillText(`${score.player} - ${score.bot}`, WIDTH/2 - 20, 30);
-
-    // ===== CUENTA ATRÁS + MENSAJE DE GOL MEJORADO =====
-    if (gameState === "COUNTDOWN") {
-        // Mensaje de gol grande
-        ctx.fillStyle = "yellow"; 
-        ctx.font = "bold 50px Arial"; 
-        ctx.textAlign = "center";
-        ctx.fillText(goalMessage, WIDTH/2, HEIGHT/2 - 50);
-
-        // Cuenta atrás
-        ctx.fillStyle = "white"; 
-        ctx.font = "bold 60px Arial";
-        ctx.fillText(countdownValue, WIDTH/2, HEIGHT/2 + 50);
-    }
-
-    // ===== BARRA DE POTENCIA =====
-    if (powerShot.charging) {
-        powerShot.power = Math.min(powerShot.power + 0.4, powerShot.maxPower);
-        ctx.fillStyle = "red"; 
-        ctx.fillRect(player.x - 20, player.y - 35, powerShot.power * 2.5, 5);
-    }
 }
 
 function loop() {
@@ -389,4 +342,5 @@ function loop() {
 }
 
 loop();
+renderMenu();
 playMusicFromStart();

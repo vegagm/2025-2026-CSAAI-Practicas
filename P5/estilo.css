@@ -3,47 +3,53 @@
     --field: #2c8f4a;
     --accent: #4caf50;
     --power: #ffd54a;
+    --player-color: #2d7ff9;
+    --bot-color: #f92d2d;
 }
 
 body {
     background-color: var(--bg);
     color: white;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 #game-container { 
     text-align: center; 
-    width: 100%; 
+    width: 95%; 
     max-width: 800px; 
 }
 
 .canvas-wrapper { 
     position: relative; 
     width: 100%; 
+    box-shadow: 0 0 50px rgba(0,0,0,0.5); 
 }
 
 canvas {
     background-color: var(--field);
-    border: 5px solid white;
+    border: 5px solid rgba(255,255,255,0.8);
     border-radius: 8px;
-    max-width: 100%;
+    width: 100%;
     height: auto;
+    display: block;
 }
 
 .overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
+    border-radius: 4px;
+    z-index: 10;
 }
 
 .hidden { 
@@ -51,69 +57,53 @@ canvas {
 }
 
 button {
-    padding: 15px 25px;
+    padding: 15px 30px;
     margin: 10px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
     background: var(--accent);
     border: none;
     color: white;
-    border-radius: 5px;
+    border-radius: 50px;
+    transition: 0.3s;
 }
 
 button:hover { 
-    background: #45a049; 
-    transform: scale(1.05); 
-}
-
-.controls-hint { 
-    font-size: 0.9rem; 
-    color: #ccc; 
-    margin-top: 20px; 
+    background: #66bb6a; 
+    transform: scale(1.1); 
 }
 
 #state {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
     color: var(--power);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
 }
 
-/* --- ADAPTACIÓN PARA MÓVILES Y PANTALLAS PEQUEÑAS --- */
+#music-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    background: #333;
+}
+
+#music-list button {
+    display: block;
+    width: 80%;
+    margin: 5px auto;
+    background: #444;
+}
+
+#music-list button:hover {
+    background: #666;
+}
+
 @media (max-width: 700px) {
-    body {
-        align-items: flex-start; /* Evita que el juego se corte arriba en pantallas bajas */
-        padding-top: 20px;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    #state {
-        font-size: 1rem;
-    }
-
-    #menu h2 {
-        font-size: 1.2rem;
-    }
-
-    /* Ajuste de botones para que no se amontonen */
-    button {
-        padding: 12px 20px;
-        font-size: 1rem;
-        margin: 5px;
-        width: 80%; /* Botones uno debajo de otro en móvil */
-    }
-
-    .controls-hint {
-        font-size: 0.8rem;
-        line-height: 1.4;
-    }
-    
-    /* Si tenías iconos de celdas o rejillas, aquí el equivalente: */
-    .overlay {
-        flex-direction: column; /* Apila los elementos verticalmente */
-    }
+    h1 { font-size: 1.2rem; }
+    button { width: 90%; }
 }

@@ -14,47 +14,26 @@ let countdownValue = 0;
 let goalMessage = "";
 let keys = {};
 
-// 🔊 SONIDOS
+// --- SONIDOS Y MÚSICA ---
 const kickSound = new Audio("pelota.m4a");
 const goalSound = new Audio("gol.m4a");
 
-// 🎵 MÚSICA DE FONDO
-const bgMusic = new Audio("music.mp3");
+const tracks = [
+    { name: "Canción 1", file: "musica1.m4a" },
+    { name: "Canción 2", file: "musica2.m4a" },
+    { name: "Canción 3", file: "musica3.m4a" },
+    { name: "Canción 4", file: "musica4.m4a" }
+];
+
+let currentTrackIndex = 0;
+let bgMusic = new Audio(tracks[currentTrackIndex].file);
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
-
-function playMusicFromStart() {
-    bgMusic.currentTime = 0;
-    if (!isMuted) {
-        bgMusic.play();
-    }
-}
-
-function toggleMusic() {
-    isMuted = !isMuted;
-
-    if (isMuted) {
-        bgMusic.pause();
-    } else {
-        bgMusic.play();
-    }
-
-    updateMusicButton();
-}
-
-function updateMusicButton() {
-    const btn = document.getElementById("music-btn");
-    if (!btn) return;
-    btn.textContent = isMuted ? "🔇" : "🔊";
-}
-
-
-
 let isMuted = false;
 
 // --- ENTIDADES ---
 const player = { x: 200, y: HEIGHT / 2, radius: 18, color: "#2d7ff9", speed: 4.5, angle: 0 };
-const ball = { x: WIDTH / 2, y: HEIGHT / 2, radius: 10, vx: 0, vy: 0, friction: 0.985 };
+const ball = { x: WIDTH / 2, y: HEIGHT / 2, radius: 10, vx: 0, vy: 0, friction: 0.98, color: "white" };
 
 const bots = [
     { x: 100, y: HEIGHT/2, radius: 18, color: "#4fc3f7", speed: 3.0, team: "player", role: "portero" },
@@ -64,70 +43,61 @@ const bots = [
 
 const powerShot = { charging: false, power: 0, maxPower: 16 };
 
-// --- INPUTS ---
-window.addEventListener("keydown", e => {
-    keys[e.code] = true;
-
-    if (e.key.toLowerCase() === 'r') resetMatch();
-    if (e.key.toLowerCase() === 'm') backToMenu();
-
-    if (e.code === "Space" && gameState === "PLAYING") powerShot.charging = true;
-});
-
-window.addEventListener("keyup", e => {
-    keys[e.code] = false;
-    if (e.code === "Space") releasePowerShot();
-});
-
-// --- MENÚ ---
-function selectMode(mode) {
-    gameMode = mode;
-    score.player = 0;
-    score.bot = 0;
-    overlay.classList.add("hidden");
-    playMusicFromStart();
-    startCountdown();
-}
-
-function resetMatch() {
-    if (gameMode === "") return; 
-    score.player = 0;
-    score.bot = 0;
-    goalMessage = "";
-    overlay.classList.add("hidden"); 
-    playMusicFromStart();
-    startCountdown(); 
-}
-
-function backToMenu() {
-    gameState = "MENU";
-    gameMode = "";
-    overlay.classList.remove("hidden");
-
-    playMusicFromStart();
-    
+// --- LÓGICA DE MENÚ Y MÚSICA ---
+function renderMenu() {
     menuContent.innerHTML = `
-        <h2>Elige modo de juego</h2>
+        <h2>Bot League Arcade</h2>
         <button onclick="selectMode('3goals')">Partido a 3 goles</button>
         <button onclick="selectMode('golden')">Gol de Oro</button>
-        <p class="controls-hint">Mover: Flechas | Girar: A/D | Chutar: Espacio<br>R: Reiniciar | M: Menú</p>
+        <h3>🎵 Música</h3>
+        <div>
+            ${tracks.map((t, i) => `
+                <button onclick="changeTrack(${i})"
+                    style="background:${i === currentTrackIndex ? '#4caf50' : '#444'}; padding: 8px 15px; font-size: 0.9rem;">
+                    ${t.name}
+                </button>
+            `).join("")}
+        </div>
+        <button onclick="toggleMusic()" style="position:absolute; top:15px; right:15px; border-radius:50%; width:50px; height:50px;">
+            ${isMuted ? "🔇" : "🔊"}
+        </button>
+        <p class="controls-hint">Flechas: Mover | A/D: Girar | Espacio: Chutar</p>
     `;
 }
 
-// --- PARTIDA ---
+function changeTrack(index) {
+    bgMusic.pause();
+    currentTrackIndex = index;
+    bgMusic = new Audio(tracks[index].file);
+    bgMusic.loop = true;
+    bgMusic.volume = 0.5;
+    if (!isMuted) bgMusic.play();
+    renderMenu();
+}
+
+function toggleMusic() {
+    isMuted = !isMuted;
+    isMuted ? bgMusic.pause() : bgMusic.play();
+    renderMenu();
+}
+
+function selectMode(mode) {
+    gameMode = mode;
+    score.player = 0; score.bot = 0;
+    overlay.classList.add("hidden");
+    if (!isMuted) bgMusic.play();
+    startCountdown();
+}
+
 function startCountdown() {
     gameState = "COUNTDOWN";
     countdownValue = 3;
     resetPositions();
-
-    if (window.timerInterval) clearInterval(window.timerInterval);
-    
-    window.timerInterval = setInterval(() => {
+    const timer = setInterval(() => {
         countdownValue--;
         if (countdownValue <= 0) {
-            clearInterval(window.timerInterval);
+            clearInterval(timer);
             gameState = "PLAYING";
-            goalMessage = "";
         }
     }, 1000);
 }
@@ -136,18 +106,16 @@ function resetPositions() {
     player.x = 200; player.y = HEIGHT / 2;
     ball.x = WIDTH / 2; ball.y = HEIGHT / 2;
     ball.vx = 0; ball.vy = 0;
-
-    bots.forEach((b, i) => {
-        if (i === 0) { b.x = 100; b.y = HEIGHT/2; }
-        if (i === 1) { b.x = WIDTH - 100; b.y = HEIGHT/2; }
-        if (i === 2) { b.x = WIDTH - 200; b.y = HEIGHT/2; }
-    });
+    bots[0].x = 80; bots[0].y = HEIGHT/2;
+    bots[1].x = WIDTH - 80; bots[1].y = HEIGHT/2;
+    bots[2].x = WIDTH - 200; bots[2].y = HEIGHT/3;
 }
 
+// --- FÍSICA Y ACTUALIZACIÓN ---
 function update() {
     if (gameState !== "PLAYING") return;
 
-    // Movimiento jugador
+    // Movimiento Jugador
     if (keys["ArrowUp"]) player.y -= player.speed;
     if (keys["ArrowDown"]) player.y += player.speed;
     if (keys["ArrowLeft"]) player.x -= player.speed;
@@ -156,45 +124,20 @@ function update() {
     if (keys["KeyD"]) player.angle += 0.07;
     keepInside(player);
 
+    // Bots (IA mejorada para evitar colisiones infinitas)
     bots.forEach(b => {
-        let targetX, targetY;
-
-        if (b.role === "portero") {
-            let goalLineX = (b.team === "player") ? 60 : WIDTH - 60;
-            targetX = goalLineX;
-
-            let mitadCampo = (b.team === "player") ? ball.x < WIDTH/2 : ball.x > WIDTH/2;
-            targetY = mitadCampo ? ball.y : HEIGHT/2;
-
-            if (Math.hypot(ball.x - b.x, ball.y - b.y) < 80) {
-                targetX = ball.x;
-                targetY = ball.y;
-            }
-
-        } else {
-            // 🧠 IA MEJORADA
-            if (Math.hypot(ball.x - b.x, ball.y - b.y) < 150) {
-                targetX = ball.x;
-                targetY = ball.y;
-            } else {
-                targetX = ball.x - 40;
-                targetY = ball.y;
-            }
-        }
-
-        let dx = targetX - b.x;
-        let dy = targetY - b.y;
+        let dx = ball.x - b.x;
+        let dy = ball.y - b.y;
         let dist = Math.hypot(dx, dy);
-
-        if (dist > 5) {
+        if (dist > 10) {
             b.x += (dx / dist) * b.speed;
             b.y += (dy / dist) * b.speed;
         }
-
         checkCollision(b);
         keepInside(b);
     });
 
+    // Balón
     ball.x += ball.vx;
     ball.y += ball.vy;
     ball.vx *= ball.friction;
@@ -205,77 +148,43 @@ function update() {
 }
 
 function handleWallBounces() {
-    const bounce = -0.8;
-
-    if (ball.y - ball.radius < 0) { ball.y = ball.radius; ball.vy *= bounce; }
-    if (ball.y + ball.radius > HEIGHT) { ball.y = HEIGHT - ball.radius; ball.vy *= bounce; }
-
-    if (ball.y < 180 || ball.y > 320) {
-        if (ball.x - ball.radius < 0) { ball.x = ball.radius; ball.vx *= bounce; }
-        if (ball.x + ball.radius > WIDTH) { ball.x = WIDTH - ball.radius; ball.vx *= bounce; }
-    } else {
-        if (ball.x < -ball.radius) scorePoint("bot");
-        else if (ball.x > WIDTH + ball.radius) scorePoint("player");
+    const bounce = -0.7;
+    // Rebotes Laterales (Líneas de fondo)
+    if (ball.x - ball.radius < 20 || ball.x + ball.radius > WIDTH - 20) {
+        // Si está en el rango de la portería
+        if (ball.y > 180 && ball.y < 320) {
+            if (ball.x < 0) scorePoint("bot");
+            else if (ball.x > WIDTH) scorePoint("player");
+        } else {
+            // Rebote en pared de fondo
+            if (ball.x - ball.radius < 20) { ball.x = 20 + ball.radius; ball.vx *= bounce; }
+            if (ball.x + ball.radius > WIDTH - 20) { ball.x = WIDTH - 20 - ball.radius; ball.vx *= bounce; }
+        }
     }
+    // Rebotes Techo/Suelo
+    if (ball.y - ball.radius < 20) { ball.y = 20 + ball.radius; ball.vy *= bounce; }
+    if (ball.y + ball.radius > HEIGHT - 20) { ball.y = HEIGHT - 20 - ball.radius; ball.vy *= bounce; }
 }
 
 function checkCollision(obj) {
     let dx = ball.x - obj.x;
     let dy = ball.y - obj.y;
     let dist = Math.hypot(dx, dy);
-    let min = obj.radius + ball.radius;
-
-    if (dist < min) {
-        let nx = dx / dist;
-        let ny = dy / dist;
-
-        ball.x += nx * 3;
-        ball.y += ny * 3;
-
-        let speed = Math.min(Math.hypot(ball.vx, ball.vy) + 4, 12);
-
-        ball.vx = nx * speed;
-        ball.vy = ny * speed;
-
-        // 🔊 sonido golpe
+    if (dist < obj.radius + ball.radius) {
+        let angle = Math.atan2(dy, dx);
+        let force = 6; 
+        ball.vx = Math.cos(angle) * force;
+        ball.vy = Math.sin(angle) * force;
         kickSound.currentTime = 0;
         kickSound.play();
     }
-}
-
-function releasePowerShot() {
-    if (!powerShot.charging) return;
-
-    let dist = Math.hypot(ball.x - player.x, ball.y - player.y);
-    if (dist < player.radius + ball.radius + 20) {
-        ball.vx = Math.cos(player.angle) * powerShot.power;
-        ball.vy = Math.sin(player.angle) * powerShot.power;
-
-        // 🔊 sonido disparo
-        kickSound.currentTime = 0;
-        kickSound.play();
-    }
-
-    powerShot.charging = false;
-    powerShot.power = 0;
 }
 
 function scorePoint(who) {
-    if (who === "player") {
-        score.player++;
-        goalMessage = "¡GOOOL!";
-    } else {
-        score.bot++;
-        goalMessage = "¡GOL RIVAL!";
-    }
-
-    // 🔊 sonido gol
+    who === "player" ? score.player++ : score.bot++;
     goalSound.play();
-
-    const endGolden = gameMode === "golden" && (score.player > 0 || score.bot > 0);
-    const end3 = gameMode === "3goals" && (score.player >= 3 || score.bot >= 3);
-
-    if (endGolden || end3) {
+    
+    if ((gameMode === "golden") || (gameMode === "3goals" && (score.player >= 3 || score.bot >= 3))) {
         showEndScreen();
     } else {
         startCountdown();
@@ -285,102 +194,109 @@ function scorePoint(who) {
 function showEndScreen() {
     gameState = "END";
     overlay.classList.remove("hidden");
-
-    const titulo = score.player > score.bot ? "¡VICTORIA!" : "DERROTA...";
-
     menuContent.innerHTML = `
-        <h2>${titulo}</h2>
-        <p>${score.player} - ${score.bot}</p>
-        <button onclick="resetMatch()">Reiniciar</button>
-        <button onclick="backToMenu()" style="background:#555">Menú</button>
+        <h2>${score.player > score.bot ? "¡VICTORIA!" : "DERROTA..."}</h2>
+        <p style="font-size:2rem">${score.player} - ${score.bot}</p>
+        <button onclick="selectMode('${gameMode}')">Revancha</button>
+        <button onclick="backToMenu()" style="background:#555">Menú Principal</button>
     `;
 }
 
+function backToMenu() {
+    gameState = "MENU";
+    overlay.classList.remove("hidden");
+    renderMenu();
+}
+
 function keepInside(obj) {
-    obj.x = Math.max(obj.radius, Math.min(WIDTH - obj.radius, obj.x));
-    obj.y = Math.max(obj.radius, Math.min(HEIGHT - obj.radius, obj.y));
+    obj.x = Math.max(obj.radius + 20, Math.min(WIDTH - obj.radius - 20, obj.x));
+    obj.y = Math.max(obj.radius + 20, Math.min(HEIGHT - obj.radius - 20, obj.y));
+}
+
+// --- DIBUJO DEL CAMPO REALISTA ---
+function drawField() {
+    // Césped bitono
+    for (let i = 0; i < 10; i++) {
+        ctx.fillStyle = i % 2 === 0 ? "#2c8f4a" : "#247e40";
+        ctx.fillRect(i * (WIDTH / 10), 0, WIDTH / 10, HEIGHT);
+    }
+
+    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    ctx.lineWidth = 3;
+
+    // Líneas exteriores
+    ctx.strokeRect(20, 20, WIDTH - 40, HEIGHT - 40);
+
+    // Línea de medio campo
+    ctx.beginPath();
+    ctx.moveTo(WIDTH / 2, 20);
+    ctx.lineTo(WIDTH / 2, HEIGHT - 20);
+    ctx.stroke();
+
+    // Círculo central
+    ctx.beginPath();
+    ctx.arc(WIDTH / 2, HEIGHT / 2, 60, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Áreas
+    ctx.strokeRect(20, 120, 80, 260); // Área Izq
+    ctx.strokeRect(WIDTH - 100, 120, 80, 260); // Área Der
+
+    // Porterías
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 5;
+    ctx.strokeRect(0, 180, 20, 140);
+    ctx.strokeRect(WIDTH - 20, 180, 20, 140);
 }
 
 function draw() {
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    
-    // ===== CAMPO (TU VERSIÓN ORIGINAL) =====
-    ctx.strokeStyle = "white"; 
-    ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, WIDTH-20, HEIGHT-20);
+    drawField();
 
-    ctx.beginPath(); 
-    ctx.moveTo(WIDTH/2, 10); 
-    ctx.lineTo(WIDTH/2, HEIGHT-10); 
-    ctx.stroke();
-
-    ctx.beginPath(); 
-    ctx.arc(WIDTH/2, HEIGHT/2, 50, 0, Math.PI*2); 
-    ctx.stroke();
-
-    // ===== PORTERÍAS (TU VERSIÓN ORIGINAL) =====
+    // Balón (Blanco)
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "rgba(0,0,0,0.5)";
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 180, 8, 140);
-    ctx.fillRect(WIDTH-8, 180, 8, 140);
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
 
-    // ===== PELOTA =====
-    ctx.beginPath(); 
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-    ctx.fillStyle = "white"; 
-    ctx.fill(); 
-    ctx.stroke();
-
-    // ===== JUGADORES (TU VERSIÓN ORIGINAL + FLECHA) =====
+    // Entidades
     [player, ...bots].forEach(b => {
-        ctx.beginPath(); 
-        ctx.arc(b.x, b.y, b.radius, 0, Math.PI*2);
-        ctx.fillStyle = b.color; 
-        ctx.fill(); 
+        ctx.fillStyle = b.color;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
         ctx.stroke();
 
-        // 🔥 FLECHA DEL JUGADOR (LA QUE QUERÍAS)
         if (b === player) {
-            ctx.beginPath(); 
-            ctx.strokeStyle = "yellow"; 
-            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.strokeStyle = "yellow";
             ctx.moveTo(b.x, b.y);
-            ctx.lineTo(
-                b.x + Math.cos(b.angle) * 30, 
-                b.y + Math.sin(b.angle) * 30
-            );
+            ctx.lineTo(b.x + Math.cos(b.angle) * 30, b.y + Math.sin(b.angle) * 30);
             ctx.stroke();
         }
     });
 
-    // ===== MARCADOR (TU TEXTO ORIGINAL) =====
-    stateEl.textContent = `MARCADOR: ${score.player} - ${score.bot} | MODO: ${gameMode}`;
+    // UI Score
+    stateEl.innerText = `${score.player} - ${score.bot}`;
 
-    // ===== MARCADOR EXTRA EN CANVAS (LO NUEVO) =====
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "white";
-    ctx.fillText(`${score.player} - ${score.bot}`, WIDTH/2 - 20, 30);
-
-    // ===== CUENTA ATRÁS + MENSAJE DE GOL MEJORADO =====
+    // Overlay de Cuenta Atrás
     if (gameState === "COUNTDOWN") {
-        // Mensaje de gol grande
-        ctx.fillStyle = "yellow"; 
-        ctx.font = "bold 50px Arial"; 
+        ctx.fillStyle = "rgba(0,0,0,0.3)";
+        ctx.fillRect(0,0,WIDTH,HEIGHT);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 80px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(goalMessage, WIDTH/2, HEIGHT/2 - 50);
-
-        // Cuenta atrás
-        ctx.fillStyle = "white"; 
-        ctx.font = "bold 60px Arial";
-        ctx.fillText(countdownValue, WIDTH/2, HEIGHT/2 + 50);
-    }
-
-    // ===== BARRA DE POTENCIA =====
-    if (powerShot.charging) {
-        powerShot.power = Math.min(powerShot.power + 0.4, powerShot.maxPower);
-        ctx.fillStyle = "red"; 
-        ctx.fillRect(player.x - 20, player.y - 35, powerShot.power * 2.5, 5);
+        ctx.fillText(countdownValue, WIDTH/2, HEIGHT/2 + 30);
     }
 }
+
+// --- BUCLE PRINCIPAL ---
+window.addEventListener("keydown", e => { keys[e.code] = true; });
+window.addEventListener("keyup", e => { keys[e.code] = false; });
 
 function loop() {
     update();
@@ -388,5 +304,5 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
+renderMenu();
 loop();
-playMusicFromStart();

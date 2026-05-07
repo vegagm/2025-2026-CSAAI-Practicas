@@ -14,6 +14,7 @@ let countdownValue = 0;
 let countdownInterval = null;
 let keys = {};
 
+
 // --- SONIDOS Y MÚSICA ---
 const kickSound = new Audio("pelota.m4a");
 const goalSound = new Audio("gol.m4a");

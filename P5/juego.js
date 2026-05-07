@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const stateEl = document.getElementById("state");
@@ -13,7 +15,6 @@ let score = { player: 0, bot: 0 };
 let countdownValue = 0;
 let countdownInterval = null;
 let keys = {};
-
 
 // --- SONIDOS Y MÚSICA ---
 const kickSound = new Audio("pelota.m4a");
@@ -42,7 +43,6 @@ const bots = [
     { x: WIDTH - 200, y: 150, radius: 18, color: "#f92d2d", speed: 3.8, team: "bot", role: "delantero" }
 ];
 
-// 🔥 SISTEMA DE DISPARO
 const powerShot = { charging: false, power: 0, maxPower: 18 };
 
 // --- MENÚS ---
@@ -71,7 +71,7 @@ function selectMode(mode) {
     gameMode = mode;
     score.player = 0; score.bot = 0;
     overlay.classList.add("hidden");
-    if (!isMuted) bgMusic.play();
+    if (!isMuted) { bgMusic.play(); }
     startCountdown();
 }
 
@@ -79,7 +79,7 @@ function startCountdown() {
     gameState = "COUNTDOWN";
     countdownValue = 3;
     resetPositions();
-    if(countdownInterval) clearInterval(countdownInterval);
+    if(countdownInterval) { clearInterval(countdownInterval); }
     countdownInterval = setInterval(() => {
         countdownValue--;
         if (countdownValue <= 0) {
@@ -109,12 +109,11 @@ window.addEventListener("keydown", e => {
         startCountdown();
     }
     if (e.key.toLowerCase() === 'm') {
-        if(countdownInterval) clearInterval(countdownInterval);
+        if(countdownInterval) { clearInterval(countdownInterval); }
         gameState = "MENU";
         overlay.classList.remove("hidden");
         renderMenu();
     }
-    // Empezar carga de tiro
     if (e.code === "Space" && gameState === "PLAYING") {
         powerShot.charging = true;
     }
@@ -122,7 +121,6 @@ window.addEventListener("keydown", e => {
 
 window.addEventListener("keyup", e => { 
     keys[e.code] = false; 
-    // Soltar tiro
     if (e.code === "Space" && gameState === "PLAYING") {
         releasePowerShot();
     }
@@ -130,46 +128,39 @@ window.addEventListener("keyup", e => {
 
 function releasePowerShot() {
     if (!powerShot.charging) return;
-
     let dx = ball.x - player.x;
     let dy = ball.y - player.y;
     let dist = Math.hypot(dx, dy);
 
-    // Solo dispara si la pelota está cerca
     if (dist < player.radius + ball.radius + 20) {
         ball.vx = Math.cos(player.angle) * powerShot.power;
         ball.vy = Math.sin(player.angle) * powerShot.power;
         kickSound.currentTime = 0;
         kickSound.play();
     }
-
     powerShot.charging = false;
     powerShot.power = 0;
 }
 
-// --- ACTUALIZACIÓN ---
 function update() {
     if (gameState !== "PLAYING") return;
 
-    // Jugador
-    if (keys["ArrowUp"]) player.y -= player.speed;
-    if (keys["ArrowDown"]) player.y += player.speed;
-    if (keys["ArrowLeft"]) player.x -= player.speed;
-    if (keys["ArrowRight"]) player.x += player.speed;
-    if (keys["KeyA"]) player.angle -= 0.08;
-    if (keys["KeyD"]) player.angle += 0.08;
+    if (keys.ArrowUp) player.y -= player.speed;
+    if (keys.ArrowDown) player.y += player.speed;
+    if (keys.ArrowLeft) player.x -= player.speed;
+    if (keys.ArrowRight) player.x += player.speed;
+    if (keys.KeyA) player.angle -= 0.08;
+    if (keys.KeyD) player.angle += 0.08;
     keepInside(player);
 
-    // Carga de potencia
     if (powerShot.charging) {
         powerShot.power = Math.min(powerShot.power + 0.4, powerShot.maxPower);
     }
 
-    // Bots Anti-Atascos
     bots.forEach(b => {
         if (b.role === "portero") {
             let targetY = Math.max(180, Math.min(320, ball.y));
-            if (Math.abs(b.y - targetY) > 5) b.y += (b.y < targetY ? 1 : -1) * b.speed;
+            if (Math.abs(b.y - targetY) > 5) { b.y += (b.y < targetY ? 1 : -1) * b.speed; }
         } else {
             let dx = ball.x - b.x;
             let dy = ball.y - b.y;
@@ -188,7 +179,6 @@ function update() {
         keepInside(b);
     });
 
-    // Balón
     ball.x += ball.vx;
     ball.y += ball.vy;
     ball.vx *= ball.friction;
@@ -206,10 +196,14 @@ function handleWallBounces() {
     if (ball.y + ball.radius > HEIGHT - m) { ball.y = HEIGHT - m - ball.radius; ball.vy *= bounce; ball.vx += (Math.random() - 0.5); }
 
     if (ball.x - ball.radius < m) {
-        if (ball.y > 180 && ball.y < 320) { if (ball.x < 0) scorePoint("bot"); }
+        if (ball.y > 180 && ball.y < 320) { 
+            if (ball.x < 0) { scorePoint("bot"); } 
+        }
         else { ball.x = m + ball.radius; ball.vx *= bounce; ball.vy += (Math.random() - 0.5); }
     } else if (ball.x + ball.radius > WIDTH - m) {
-        if (ball.y > 180 && ball.y < 320) { if (ball.x > WIDTH) scorePoint("player"); }
+        if (ball.y > 180 && ball.y < 320) { 
+            if (ball.x > WIDTH) { scorePoint("player"); } 
+        }
         else { ball.x = WIDTH - m - ball.radius; ball.vx *= bounce; ball.vy += (Math.random() - 0.5); }
     }
 }
@@ -234,10 +228,13 @@ function checkCollision(obj) {
 }
 
 function scorePoint(who) {
-    who === "player" ? score.player++ : score.bot++;
+    if (who === "player") { score.player++; } else { score.bot++; }
     goalSound.play();
-    if ((gameMode === "golden") || (gameMode === "3goals" && (score.player >= 3 || score.bot >= 3))) showEndScreen();
-    else startCountdown();
+    if ((gameMode === "golden") || (gameMode === "3goals" && (score.player >= 3 || score.bot >= 3))) {
+        showEndScreen();
+    } else {
+        startCountdown();
+    }
 }
 
 function showEndScreen() {
@@ -254,9 +251,7 @@ function keepInside(obj) {
     obj.y = Math.max(obj.radius + m, Math.min(HEIGHT - obj.radius - m, obj.y));
 }
 
-// --- DIBUJO ---
 function draw() {
-    // Campo
     for (let i = 0; i < 10; i++) {
         ctx.fillStyle = i % 2 === 0 ? "#2c8f4a" : "#247e40";
         ctx.fillRect(i * (WIDTH / 10), 0, WIDTH / 10, HEIGHT);
@@ -268,20 +263,16 @@ function draw() {
     ctx.strokeRect(20, 120, 80, 260); ctx.strokeRect(WIDTH - 100, 120, 80, 260);
     ctx.strokeStyle = "white"; ctx.strokeRect(0, 180, 20, 140); ctx.strokeRect(WIDTH - 20, 180, 20, 140);
 
-    // Balón
     ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2); ctx.fill();
 
-    // Jugadores y Bots
     [player, ...bots].forEach(b => {
         ctx.fillStyle = b.color; ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "white"; ctx.lineWidth = 2; ctx.stroke();
         
         if (b === player) {
-            // Línea de dirección
             ctx.beginPath(); ctx.strokeStyle = "yellow"; ctx.lineWidth = 3; ctx.moveTo(b.x, b.y);
             ctx.lineTo(b.x + Math.cos(b.angle) * 30, b.y + Math.sin(b.angle) * 30); ctx.stroke();
 
-            // BARRA DE CARGA (Visual)
             if (powerShot.charging) {
                 ctx.strokeStyle = "#ffeb3b";
                 ctx.lineWidth = 5;
@@ -301,8 +292,17 @@ function draw() {
 }
 
 function loop() { update(); draw(); requestAnimationFrame(loop); }
-function changeTrack(i) { bgMusic.pause(); currentTrackIndex = i; bgMusic = new Audio(tracks[i].file); bgMusic.loop = true; if(!isMuted) bgMusic.play(); renderMenu(); }
-function toggleMusic() { isMuted = !isMuted; isMuted ? bgMusic.pause() : bgMusic.play(); renderMenu(); }
+function changeTrack(i) { bgMusic.pause(); currentTrackIndex = i; bgMusic = new Audio(tracks[i].file); bgMusic.loop = true; if(!isMuted) { bgMusic.play(); } renderMenu(); }
+
+function toggleMusic() { 
+    isMuted = !isMuted; 
+    if (isMuted) {
+        bgMusic.pause();
+    } else {
+        bgMusic.play();
+    }
+    renderMenu(); 
+}
 
 renderMenu();
 loop();
